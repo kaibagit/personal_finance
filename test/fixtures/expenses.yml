@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  channel_id: 1
+  type: 
+  cent: 1
+  happened_at: 2016-01-30 15:13:34
+
+two:
+  channel_id: 1
+  type: 
+  cent: 1
+  happened_at: 2016-01-30 15:13:34

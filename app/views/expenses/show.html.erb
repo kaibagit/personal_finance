@@ -1,0 +1,22 @@
+<p id="notice"><%= notice %></p>
+<p>
+  <strong>Way:</strong>
+	<% if @expense.incoming? %>
+		<font color='green'>充值</font>
+	<% else %>
+		<font color='red'>提现</font>
+	<% end %>
+</p>
+
+<p>
+  <strong>Cent:</strong>
+  <%= @expense.cent %>
+</p>
+
+<p>
+  <strong>Happened at:</strong>
+  <%= @expense.happened_at %>
+</p>
+
+<%= link_to 'Edit', edit_expense_path(@expense) %> |
+<%= link_to('返回',{:controller => 'expenses', :action => 'index', :channel_id => @expense.channel.id }) %>
