@@ -20,7 +20,13 @@
 						<font color='red'>提现</font>
 					<% end %>
 				</td>
-        <td><%= expense.yuan %></td>
+				<td>
+					<% if expense.incoming? %>
+						<font color='green'>+<%= expense.yuan %></font>
+					<% else %>
+						<font color='red'>-<%= expense.yuan %></font>
+					<% end %>
+				</td>
         <td><%= expense.happened_at.strftime('%Y-%m-%d %H:%M:%S') %></td>
         <td><%= link_to 'Show', expense %></td>
         <td><%= link_to 'Edit', edit_expense_path(expense) %></td>
