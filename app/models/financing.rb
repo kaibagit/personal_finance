@@ -2,6 +2,7 @@ class Financing < ActiveRecord::Base
 	belongs_to :channel
 	enum status: {started:'started',finished:'finished'}
 	enum horizon_unit: {day:'day',month:'month',year:'year'}
+	enum risk: {lower_risk:'lower_risk',medium_risk:'medium_risk',high_risk:'high_risk'}
 	default_scope{order('paid_at DESC')}
 	before_save :compute
 

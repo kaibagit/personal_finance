@@ -1,4 +1,4 @@
-<h1>Listing financings</h1>
+<h1><%= @channel.name %></h1>
 
 <table>
   <thead>
@@ -9,6 +9,7 @@
       <th>到期时间(期望/实际)</th>
       <th>收入(期望/实际)元</th>
       <th>利率(期望/实际)</th>
+      <th>风险</th>
       <th>状态</th>
       <th>操作</th>
     </tr>
@@ -23,6 +24,17 @@
         <td><%= financing.exp_antedated %> / <%= financing.act_antedated %></td>
         <td><%= financing.exp_earning_yuan %> / <%= financing.act_earning_yuan %></td>
         <td><%= financing.exp_rate_percent %>% / <%= financing.act_rate_percent %>%</td>
+        <td>
+          <% if financing.lower_risk? %>
+            <font color='green'>低风险</font>
+          <% elsif financing.medium_risk? %>
+            <font color='orange'>中等风险</font>
+          <% elsif financing.high_risk? %>
+            <font color='red'>高风险</font>
+          <% else %>
+            <%= financing.risk %>
+          <% end %>
+        </td>
         <td>
           <% if financing.finished? %>
             <font color='green'>已完成</font>
@@ -42,7 +54,11 @@
     <% end %>
   </tbody>
 </table>
-
+<br>
+总计：<%= @channel.total_yuan %>元
+<font color='green'>低风险：</font><%= @lower_risk_money/100.0 %>元（<%= Float(@lower_risk_money)/@channel.total_yuan %>%）
+<font color='orange'>中等风险：</font><%= @medium_risk_money/100.0 %>元（<%= Float(@medium_risk_money)/@channel.total_yuan %>%）
+<font color='red'>高风险：</font><%= @high_risk_money/100.0 %>元（<%= Float(@high_risk_money)/@channel.total_yuan %>%）
 <br>
 
 <%= link_to('新增投资',{:controller=> 'financings', :action => 'new', :channel_id => @channel.id}) %>

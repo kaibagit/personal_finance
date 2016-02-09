@@ -6,6 +6,18 @@ class FinancingsController < ApplicationController
   def index
 		@channel = Channel.find(params['channel_id'])
     @financings = Financing.where(:channel => @channel)
+    @lower_risk_money = @medium_risk_money = @high_risk_money = 0
+    @financings.each do |f|
+      if f.started?
+        if f.lower_risk?
+          @lower_risk_money+=f.money_cent
+        elsif f.medium_risk?
+          @medium_risk_money+=f.money_cent
+        elsif f.high_risk?
+          @high_risk_money+=f.money_cent
+        end
+      end
+    end
   end
 
   # GET /financings/1
@@ -31,6 +43,7 @@ class FinancingsController < ApplicationController
 
     respond_to do |format|
       if @financing.save
+        @financing.channel.change_cent(@financing.money_cent)
         #format.html { redirect_to @financing, notice: 'Financing was successfully created.' }
 				format.html { redirect_to action: "index",channel_id: @financing.channel_id }
         format.json { render :show, status: :created, location: @financing }
@@ -94,6 +107,6 @@ class FinancingsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def financing_params
-      params.require(:financing).permit(:channel_id, :name, :exp_rate, :money_cent, :paid_at, :status, :exp_antedated, :act_antedated, :act_rate, :exp_earning, :exp_earning_yuan, :act_earning, :money_yuan, :exp_rate_percent, :horizon, :horizon_unit, :interested_at ,:act_earning_yuan)
+      params.require(:financing).permit(:channel_id, :name, :exp_rate, :money_cent, :paid_at, :status, :exp_antedated, :act_antedated, :act_rate, :exp_earning, :exp_earning_yuan, :act_earning, :money_yuan, :exp_rate_percent, :horizon, :horizon_unit, :interested_at ,:act_earning_yuan, :risk)
     end
 end
