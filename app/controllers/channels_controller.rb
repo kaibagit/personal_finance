@@ -5,6 +5,11 @@ class ChannelsController < ApplicationController
   # GET /channels.json
   def index
     @channels = Channel.all
+    total_cent = 0
+    @channels.each do |c|
+      total_cent+=c.total_cent
+    end
+    @total_yuan = total_cent/100.0
   end
 
   # GET /channels/1
@@ -29,7 +34,7 @@ class ChannelsController < ApplicationController
 
     respond_to do |format|
       if @channel.save
-        format.html { redirect_to @channel, notice: 'Channel was successfully created.' }
+        format.html { redirect_to action: "index"}
         format.json { render :show, status: :created, location: @channel }
       else
         format.html { render :new }
@@ -43,7 +48,7 @@ class ChannelsController < ApplicationController
   def update
     respond_to do |format|
       if @channel.update(channel_params)
-        format.html { redirect_to @channel, notice: 'Channel was successfully updated.' }
+        format.html { redirect_to action: "index"}
         format.json { render :show, status: :ok, location: @channel }
       else
         format.html { render :edit }
