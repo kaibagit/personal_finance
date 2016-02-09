@@ -1,0 +1,59 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Channel:</strong>
+  <%= @financing.channel_id %>
+</p>
+
+<p>
+  <strong>Name:</strong>
+  <%= @financing.name %>
+</p>
+
+<p>
+  <strong>Exp rate:</strong>
+  <%= @financing.exp_rate %>
+</p>
+
+<p>
+  <strong>Money cent:</strong>
+  <%= @financing.money_cent %>
+</p>
+
+<p>
+  <strong>Paid at:</strong>
+  <%= @financing.paid_at %>
+</p>
+
+<p>
+  <strong>Status:</strong>
+  <%= @financing.status %>
+</p>
+
+<p>
+  <strong>Exp antedated:</strong>
+  <%= @financing.exp_antedated %>
+</p>
+
+<p>
+  <strong>Act antedated:</strong>
+  <%= @financing.act_antedated %>
+</p>
+
+<p>
+  <strong>Act rate:</strong>
+  <%= @financing.act_rate %>
+</p>
+
+<p>
+  <strong>Exp earning:</strong>
+  <%= @financing.exp_earning %>
+</p>
+
+<p>
+  <strong>Act earning:</strong>
+  <%= @financing.act_earning %>
+</p>
+
+<%= link_to 'Edit', edit_financing_path(@financing) %> |
+<%= link_to 'Back', financings_path %>

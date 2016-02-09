@@ -1,0 +1,27 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  channel_id: 1
+  name: MyString
+  exp_rate: 1.5
+  money_cent: 1
+  paid_at: 2016-02-05 11:39:05
+  status: MyString
+  exp_antedated: 2016-02-05
+  act_antedated: 2016-02-05
+  act_rate: 1.5
+  exp_earning: 1
+  act_earning: 1
+
+two:
+  channel_id: 1
+  name: MyString
+  exp_rate: 1.5
+  money_cent: 1
+  paid_at: 2016-02-05 11:39:05
+  status: MyString
+  exp_antedated: 2016-02-05
+  act_antedated: 2016-02-05
+  act_rate: 1.5
+  exp_earning: 1
+  act_earning: 1

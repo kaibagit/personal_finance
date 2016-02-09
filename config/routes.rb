@@ -1,7 +1,16 @@
 Rails.application.routes.draw do
+
+  get 'financings/finish_view' => 'financings#finish_view'
+  patch 'financings/finish' => 'financings#finish'
+  resources :financings
+
   resources :expenses
 
   resources :channels
+
+
+
+  #match "controller#action" do: get "controller#action" end
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

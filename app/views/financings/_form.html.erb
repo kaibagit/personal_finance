@@ -1,0 +1,50 @@
+<%= form_for(@financing) do |f| %>
+  <% if @financing.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@financing.errors.count, "error") %> prohibited this financing from being saved:</h2>
+
+      <ul>
+      <% @financing.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <input type="hidden" name="financing[channel_id]" value="<%= @financing.channel.id %>">
+  <div class="field">
+    <%= f.label '名称' %><br>
+    <%= f.text_field :name %>
+  </div>
+  <div class="field">
+    <%= f.label '金额' %><br>
+    <!--
+    <%= f.number_field :money_cent %>
+    -->
+    <%= f.text_field :money_yuan %> 元
+  </div>
+  <div class="field">
+    <%= f.label '时间' %><br>
+    <%= f.number_field :horizon %>
+    <%= select("financing","horizon_unit",{"天" => "day", "月" => "month","年" => "year"}) %>
+  </div>
+  <div class="field">
+    <%= f.label '利率' %><br>
+    <%= f.text_field :exp_rate_percent %> %
+  </div>
+  <div class="field">
+    <%= f.label '支付时间' %><br>
+    <%= f.datetime_select :paid_at %>
+  </div>
+  <div class="field">
+    <%= f.label '计息时间' %><br>
+    <%= f.date_select :interested_at %>
+  </div>
+  <div class="field">
+    <%= f.label '到期收益' %><br>
+    <%= f.number_field :exp_earning_yuan %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

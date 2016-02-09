@@ -1,5 +1,6 @@
 class Channel < ActiveRecord::Base
   has_many :expenses
+	has_many :financings
 	default_scope{order('id')}
 
 	def total_yuan

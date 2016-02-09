@@ -1,0 +1,45 @@
+<h1>投资完成</h1>
+
+<%= form_for(@financing,{:url=>'finish'}) do |f| %>
+
+  <input type="hidden" name="id" value="<%= @financing.id %>">
+  <input type="hidden" name="financing[channel_id]" value="<%= @financing.channel.id %>">
+  <p>
+    <strong>Name:</strong>
+    <%= @financing.name %>
+  </p>
+  <p>
+    <strong>金额:</strong>
+    <%= @financing.money_yuan %> 元
+  </p>
+  <p>
+    <strong>付款时间:</strong>
+    <%= @financing.paid_at.strftime('%Y-%m-%d %H:%M:%S') %>
+  </p>
+  <p>
+    <strong>起息日期:</strong>
+    <%= @financing.interested_at %>
+  </p>
+  <p>
+    <strong>到期时间:</strong>
+    <%= @financing.exp_antedated %>
+    <strong>回款时间:</strong>
+    <%= f.date_select :act_antedated %>
+  </p>
+  <p>
+    <strong>收益:</strong>
+    <%= @financing.exp_earning_yuan %> 元
+    <strong>最终收益:</strong>
+    <%= f.text_field :act_earning_yuan %> 元
+  </p>
+  <p>
+    <strong>利率:</strong>
+    <%= @financing.exp_rate_percent %> %
+  </p>
+
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+  <%= link_to('返回',{:controller => 'financings', :action => 'index', :channel_id => @financing.channel.id }) %>
+
+<% end %>

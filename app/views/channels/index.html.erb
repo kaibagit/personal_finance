@@ -17,7 +17,8 @@
         <td><%= link_to 'Show', channel %></td>
         <td><%= link_to 'Edit', edit_channel_path(channel) %></td>
         <td><%= link_to 'Destroy', channel, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-        <td><%= link_to('收支',{:controller => 'expenses', :action => 'index', :channel_id => channel.id }) %></td>
+				<td><%= link_to('收支',{:controller => 'expenses', :action => 'index', :channel_id => channel.id }) %></td>
+        <td><%= link_to('投资',{:controller => 'financings', :action => 'index', :channel_id => channel.id }) %></td>
       </tr>
     <% end %>
   </tbody>
