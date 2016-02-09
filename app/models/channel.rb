@@ -9,5 +9,19 @@ class Channel < ActiveRecord::Base
 
 	def change_cent(cent)
 		self.total_cent=total_cent+cent
+    save
 	end
+
+  # 收益
+  def earning(cent)
+    self.earnings=earnings+cent
+    change_cent(cent)
+  end
+
+  def earnings_yuan
+    if earnings.blank?
+      return nil
+    end
+    BigDecimal.new(earnings)/100
+  end
 end

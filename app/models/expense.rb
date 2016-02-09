@@ -10,6 +10,5 @@ class Expense < ActiveRecord::Base
 
 	def change_channel
 		channel.change_cent(cent)
-		channel.save
 	end
 end

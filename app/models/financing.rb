@@ -36,8 +36,7 @@ class Financing < ActiveRecord::Base
 			# 利率 = (利息/本金)/(计息天数/365) = 利息*365/本金*计息天数
 			self.act_rate=Float(act_earning*365)/(money_cent*total_days)
 			self.status='finished'
-			channel.change_cent act_earning
-			channel.save
+			channel.earning act_earning
 		end
 
 	end

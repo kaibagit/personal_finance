@@ -5,6 +5,7 @@
     <tr>
       <th>Name</th>
       <th>金额（元）</th>
+      <th>总收益（元）</th>
       <th colspan="3"></th>
     </tr>
   </thead>
@@ -14,6 +15,7 @@
       <tr>
         <td><%= channel.name %></td>
         <td><%= channel.total_yuan %></td>
+        <td><%= channel.earnings_yuan %></td>
         <td><%= link_to 'Show', channel %></td>
         <td><%= link_to 'Edit', edit_channel_path(channel) %></td>
         <td><%= link_to 'Destroy', channel, method: :delete, data: { confirm: 'Are you sure?' } %></td>

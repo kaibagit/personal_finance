@@ -31,6 +31,7 @@ class ChannelsController < ApplicationController
   def create
     @channel = Channel.new(channel_params)
     if @channel.total_cent.nil?; @channel.total_cent=0; end
+    if @channel.earnings.nil?; @channel.earnings=0; end
 
     respond_to do |format|
       if @channel.save
