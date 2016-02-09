@@ -55,10 +55,10 @@
   </tbody>
 </table>
 <br>
-总计：<%= @channel.total_yuan %>元
-<font color='green'>低风险：</font><%= @lower_risk_money/100.0 %>元（<%= Float(@lower_risk_money)/@channel.total_yuan %>%）
-<font color='orange'>中等风险：</font><%= @medium_risk_money/100.0 %>元（<%= Float(@medium_risk_money)/@channel.total_yuan %>%）
-<font color='red'>高风险：</font><%= @high_risk_money/100.0 %>元（<%= Float(@high_risk_money)/@channel.total_yuan %>%）
+合计：<%= @channel.total_yuan %>元
+<font color='green'>低风险：</font><%= @lower_risk_money/100.0 %>元（<%= div_to_percent(@lower_risk_money,@channel.total_cent) %>）
+<font color='orange'>中等风险：</font><%= @medium_risk_money/100.0 %>元（<%= div_to_percent(@medium_risk_money,@channel.total_cent) %>）
+<font color='red'>高风险：</font><%= @high_risk_money/100.0 %>元（<%= div_to_percent(@high_risk_money,@channel.total_cent) %>）
 <br>
 
 <%= link_to('新增投资',{:controller=> 'financings', :action => 'new', :channel_id => @channel.id}) %>

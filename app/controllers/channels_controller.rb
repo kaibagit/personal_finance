@@ -5,11 +5,14 @@ class ChannelsController < ApplicationController
   # GET /channels.json
   def index
     @channels = Channel.all
-    total_cent = 0
+    @total_cent = @total_lower_risk = @total_medium_risk = @total_high_risk = 0
     @channels.each do |c|
-      total_cent+=c.total_cent
+      @total_cent+=c.total_cent
+      @total_lower_risk+=c.lower_risk_money
+      @total_medium_risk+=c.medium_risk_money
+      @total_high_risk+=c.high_risk_money
     end
-    @total_yuan = total_cent/100.0
+    @total_yuan = @total_cent/100.0
   end
 
   # GET /channels/1

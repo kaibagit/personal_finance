@@ -24,4 +24,20 @@ class Channel < ActiveRecord::Base
     end
     BigDecimal.new(earnings)/100
   end
+
+  # 低风险金额
+  def lower_risk_money
+    Financing.where(:channel => self, :status => 'started', :risk => 'lower_risk').sum(:money_cent)
+  end
+
+  # 中等风险金额
+  def medium_risk_money
+    Financing.where(:channel => self, :status => 'started', :risk => 'medium_risk').sum(:money_cent)
+  end
+
+  # 高风险金额
+  def high_risk_money
+    Financing.where(:channel => self, :status => 'started', :risk => 'high_risk').sum(:money_cent)
+  end
+
 end
