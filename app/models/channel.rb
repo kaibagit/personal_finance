@@ -40,4 +40,8 @@ class Channel < ActiveRecord::Base
     Financing.where(:channel => self, :status => 'started', :risk => 'high_risk').sum(:money_cent)
   end
 
+  def other_money
+    total_cent-lower_risk_money-medium_risk_money-high_risk_money
+  end
+
 end

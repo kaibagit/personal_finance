@@ -20,6 +20,7 @@
           <font color='green'>低风险：</font><%= cent_to_yuan(channel.lower_risk_money) %>元（<%= div_to_percent(channel.lower_risk_money,channel.total_cent) %>）
           <font color='orange'>中等风险：</font><%= cent_to_yuan(channel.medium_risk_money) %>元（<%= div_to_percent(channel.medium_risk_money,channel.total_cent) %>）
           <font color='red'>高风险：</font><%= cent_to_yuan(channel.high_risk_money) %>元（<%= div_to_percent(channel.high_risk_money,channel.total_cent) %>）
+          <font color='gray'>其他：</font><%= cent_to_yuan(channel.other_money) %>元（<%= div_to_percent(channel.other_money,channel.total_cent) %>）
         </td>
         <td><%= channel.earnings_yuan %></td>
         <td><%= link_to 'Show', channel %></td>
@@ -36,6 +37,7 @@
 <font color='green'>低风险：</font><%= cent_to_yuan(@total_lower_risk) %>元（<%= format_to_percent(Float(@total_lower_risk)/@total_cent) %>）
 <font color='orange'>中等风险：</font><%= cent_to_yuan(@total_medium_risk) %>元（<%= format_to_percent(Float(@total_medium_risk)/@total_cent) %>）
 <font color='red'>高风险：</font><%= cent_to_yuan(@total_high_risk) %>元（<%= format_to_percent(Float(@total_high_risk)/@total_cent) %>）
+<font color='gray'>其他：</font><%= cent_to_yuan(@other) %>元（<%= div_to_percent(@other,@total_cent) %>）
 <br>
 
 <%= link_to 'New Channel', new_channel_path %>

@@ -12,6 +12,7 @@ class ChannelsController < ApplicationController
       @total_medium_risk+=c.medium_risk_money
       @total_high_risk+=c.high_risk_money
     end
+    @other = @total_cent-@total_lower_risk-@total_medium_risk-@total_high_risk
     @total_yuan = @total_cent/100.0
   end
 
