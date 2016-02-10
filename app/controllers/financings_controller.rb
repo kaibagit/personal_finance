@@ -43,7 +43,6 @@ class FinancingsController < ApplicationController
 
     respond_to do |format|
       if @financing.save
-        @financing.channel.change_cent(@financing.money_cent)
         #format.html { redirect_to @financing, notice: 'Financing was successfully created.' }
 				format.html { redirect_to action: "index",channel_id: @financing.channel_id }
         format.json { render :show, status: :created, location: @financing }
