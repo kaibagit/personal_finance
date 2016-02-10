@@ -5,6 +5,7 @@
     <tr>
       <th>Name</th>
       <th>金额（元）</th>
+      <th>占比</th>
       <th>风险（元）</th>
       <th>总收益（元）</th>
       <th colspan="3"></th>
@@ -16,6 +17,7 @@
       <tr>
         <td><%= channel.name %></td>
         <td><%= channel.total_yuan %></td>
+        <td><%= div_to_percent(channel.total_cent,@total_cent) %></td>
         <td>
           <font color='green'>低风险：</font><%= cent_to_yuan(channel.lower_risk_money) %>元（<%= div_to_percent(channel.lower_risk_money,channel.total_cent) %>）
           <font color='orange'>中等风险：</font><%= cent_to_yuan(channel.medium_risk_money) %>元（<%= div_to_percent(channel.medium_risk_money,channel.total_cent) %>）
