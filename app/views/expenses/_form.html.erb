@@ -16,8 +16,8 @@
     <%= select("expense","way",{"充值" => "incoming", "提现" => "outgoings"}) %>
   </div>
   <div class="field">
-    <%= f.label :cent %><br>
-    <%= f.number_field :cent %>
+    <%= f.label '金额' %><br>
+    <%= f.text_field :yuan %> 元
   </div>
   <div class="field">
     <%= f.label :happened_at %><br>
