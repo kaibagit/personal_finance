@@ -106,6 +106,9 @@ class FinancingsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def financing_params
-      params.require(:financing).permit(:channel_id, :name, :exp_rate, :money_cent, :paid_at, :status, :exp_antedated, :act_antedated, :act_rate, :exp_earning, :exp_earning_yuan, :act_earning, :money_yuan, :exp_rate_percent, :horizon, :horizon_unit, :interested_at ,:act_earning_yuan, :risk)
+      params.require(:financing).permit(
+        :channel_id, :name, :exp_rate, :money_cent, :paid_at, :status, :exp_antedated, :act_antedated, :act_rate,
+         :exp_earning, :exp_earning_yuan, :act_earning, :money_yuan, :exp_rate_percent, :horizon, :horizon_unit, :interested_at ,:act_earning_yuan, :risk,
+         :liquidity_type)
     end
 end

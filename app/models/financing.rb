@@ -3,42 +3,64 @@ class Financing < ActiveRecord::Base
 	enum status: {started:'started',finished:'finished'}
 	enum horizon_unit: {day:'day',month:'month',year:'year'}
 	enum risk: {lower_risk:'lower_risk',medium_risk:'medium_risk',high_risk:'high_risk'}
+	enum liquidity_type:{current:'current',fixed:'fixed'}
 	default_scope{order('paid_at DESC')}
 	before_save :compute
 
 	def compute
 		puts 'compute'
 		self.status='started'
-
-		if day?
-			self.exp_antedated=(interested_at.advance(days:self.horizon))
-		elsif month?
-			self.exp_antedated=(interested_at.advance(months:self.horizon))
-		elsif year?
-			self.exp_antedated=(interested_at.advance(years:self.horizon))
-		else
-			raise 'unknown horizon_unit'
-		end
-
-		if exp_earning.blank?
+		if fixed?
+			#计算期望到期时间
 			if day?
-				self.exp_earning=money_cent*exp_rate*horizon/365
+				self.exp_antedated=(interested_at.advance(days:self.horizon))
 			elsif month?
-				self.exp_earning=money_cent*exp_rate*horizon/12
+				self.exp_antedated=(interested_at.advance(months:self.horizon))
 			elsif year?
-				self.exp_earning=money_cent*exp_rate*horizon
+				self.exp_antedated=(interested_at.advance(years:self.horizon))
 			else
 				raise 'unknown horizon_unit'
 			end
+
+			#计算期望到期收益
+			if exp_earning.blank?
+				if day?
+					self.exp_earning=money_cent*exp_rate*horizon/365
+				elsif month?
+					self.exp_earning=money_cent*exp_rate*horizon/12
+				elsif year?
+					self.exp_earning=money_cent*exp_rate*horizon
+				else
+					raise 'unknown horizon_unit'
+				end
+			end
+
+			# 投资完成
+			unless act_antedated.blank? and act_earning.blank?
+				total_days = (act_antedated-interested_at).to_i+1
+				# 利率 = (利息/本金)/(计息天数/365) = 利息*365/本金*计息天数
+				self.act_rate=Float(act_earning*365)/(money_cent*total_days)
+				self.status='finished'
+				channel.earning act_earning
+			end
+		else	#活期
+			unless id.blank?
+				total_days = (act_antedated-interested_at).to_i+1
+				if act_earning.blank?
+					self.act_rate = exp_rate
+					# 收益 = 本金*(计息天数/365)*利率
+					self.act_earning = money_cent*total_days/365*exp_rate
+				else
+					# 利率 = (利息/本金)/(计息天数/365) = 利息*365/本金*计息天数
+					self.act_rate=Float(act_earning*365)/(money_cent*total_days)
+				end
+
+				self.status='finished'
+				channel.earning self.act_earning
+			end
 		end
 
-		unless act_antedated.blank? and act_earning.blank?
-			total_days = (act_antedated-interested_at).to_i+1
-			# 利率 = (利息/本金)/(计息天数/365) = 利息*365/本金*计息天数
-			self.act_rate=Float(act_earning*365)/(money_cent*total_days)
-			self.status='finished'
-			channel.earning act_earning
-		end
+
 
 	end
 

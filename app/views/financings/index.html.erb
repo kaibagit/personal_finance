@@ -4,6 +4,7 @@
   <thead>
     <tr>
       <th>名称</th>
+      <th>流动性</th>
       <th>金额(元)</th>
       <th>付款时间</th>
       <th>到期时间(期望/实际)</th>
@@ -19,6 +20,13 @@
     <% @financings.each do |financing| %>
       <tr>
         <td><%= financing.name %></td>
+        <td>
+            <% if financing.current? %>
+              活期
+            <% else %>
+              定期
+            <% end %>
+        </td>
         <td><%= financing.money_yuan %></td>
         <td><%= financing.paid_at.strftime('%Y-%m-%d %H:%M:%S') %></td>
         <td><%= financing.exp_antedated %> / <%= financing.act_antedated %></td>

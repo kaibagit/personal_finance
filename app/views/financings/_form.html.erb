@@ -16,6 +16,10 @@
     <%= f.label '名称' %><br>
     <%= f.text_field :name %>
   </div>
+  <div>
+    <%= f.label '流动性' %><br>
+    <%= select("financing","liquidity_type",{"定期" => "fixed", "活期" => "current"}) %>
+  </div>
   <div class="field">
     <%= f.label '金额' %><br>
     <!--
