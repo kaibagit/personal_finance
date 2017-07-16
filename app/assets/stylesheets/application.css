@@ -13,7 +13,7 @@
  *= require_tree .
  *= require_self
  */
-tr{
+tr th{
   border:1px solid black;
 }
 td{

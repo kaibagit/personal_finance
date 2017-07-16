@@ -8,7 +8,7 @@
       <th>占比</th>
       <th>风险（元）</th>
       <th>总收益（元）</th>
-      <th colspan="3"></th>
+      <th colspan="5"></th>
     </tr>
   </thead>
 
@@ -34,12 +34,44 @@
     <% end %>
   </tbody>
 </table>
-<br>
+<p>
 合计：<%= @total_yuan %>元
 <font color='green'>低风险：</font><%= cent_to_yuan(@total_lower_risk) %>元（<%= format_to_percent(Float(@total_lower_risk)/@total_cent) %>）
 <font color='orange'>中等风险：</font><%= cent_to_yuan(@total_medium_risk) %>元（<%= format_to_percent(Float(@total_medium_risk)/@total_cent) %>）
 <font color='red'>高风险：</font><%= cent_to_yuan(@total_high_risk) %>元（<%= format_to_percent(Float(@total_high_risk)/@total_cent) %>）
 <font color='gray'>其他：</font><%= cent_to_yuan(@other) %>元（<%= div_to_percent(@other,@total_cent) %>）
-<br>
+</p>
+
+<p>
+<b>即将到期：</b>
+<table>
+  <thead>
+    <tr>
+      <th>渠道</th>
+      <th>投资</th>
+      <th>金额</th>
+      <th>利率</th>
+      <th>预期收益（元）</th>
+      <th>到期时间</th>
+      <th>距离天数</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @about_to_expire_financings.each do |financing| %>
+      <tr>
+        <td><%= financing.channel.name %></td>
+        <td><%= financing.name %></td>
+        <td><%= financing.money_yuan %></td>
+        <td><%= financing.exp_rate_percent %>%</td>
+        <td><%= financing.exp_earning_yuan %></td>
+        <td><%= financing.exp_antedated.strftime('%Y-%m-%d') %></td>
+        <td><font color='red'><%= financing.exp_antedated-Time.now.to_date %></font></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+</p>
+
 
 <%= link_to 'New Channel', new_channel_path %>

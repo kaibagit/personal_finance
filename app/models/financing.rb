@@ -7,6 +7,11 @@ class Financing < ActiveRecord::Base
 	default_scope{order('paid_at DESC')}
 	before_save :compute
 
+	def self.about_to_expire
+		about_to_expire_time = Time.now + 1.month
+		Financing.where("status=? and exp_antedated<=?",'started',about_to_expire_time).reorder("exp_antedated")
+	end
+
 	def compute
 		puts 'compute'
 		self.status='started'

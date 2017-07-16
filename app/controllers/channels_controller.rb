@@ -14,6 +14,7 @@ class ChannelsController < ApplicationController
     end
     @other = @total_cent-@total_lower_risk-@total_medium_risk-@total_high_risk
     @total_yuan = @total_cent/100.0
+    @about_to_expire_financings = Financing.about_to_expire
   end
 
   # GET /channels/1
