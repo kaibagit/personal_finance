@@ -73,5 +73,57 @@
 </table>
 </p>
 
+<p>
+  <b>流动性：</b>
+  <table>
+    <thead>
+      <tr>
+        <th>流动性</th>
+        <th>金额</th>
+        <th>占比</th>
+      </tr>
+    </thead>
 
+    <tbody>
+      <tr>
+        <td>活期</td>
+        <td><%= @current_cent/100.0 %></td>
+        <td><%= div_to_percent(@current_cent.to_f,@total_cent) %></td>
+      </tr>
+      <tr>
+        <td>一个月内</td>
+        <td><%= @one_month_fixed_cent/100.0 %></td>
+        <td><%= div_to_percent(@one_month_fixed_cent.to_f,@total_cent) %></td>
+      </tr>
+      <tr>
+        <td>三个月内</td>
+        <td><%= @three_month_fixed_cnet/100.0 %></td>
+        <td><%= div_to_percent(@three_month_fixed_cnet.to_f,@total_cent) %></td>
+      </tr>
+      <tr>
+        <td>半年内</td>
+        <td><%= @half_year_fixed_cent/100.0 %></td>
+        <td><%= div_to_percent(@half_year_fixed_cent.to_f,@total_cent) %></td>
+      </tr>
+      <tr>
+        <td>一年内</td>
+        <td><%= @one_year_fixed_cent/100.0 %></td>
+        <td><%= div_to_percent(@one_year_fixed_cent.to_f,@total_cent) %></td>
+      </tr>
+      <tr>
+        <td>一年以上</td>
+        <td><%= @more_than_one_year_fixed_cent/100.0 %></td>
+        <td><%= div_to_percent(@more_than_one_year_fixed_cent.to_f,@total_cent) %></td>
+      </tr>
+      <tr>
+        <td>其他</td>
+        <td><%= @other_liquidity_cent/100.0 %></td>
+        <td><%= div_to_percent(@other_liquidity_cent.to_f,@total_cent) %></td>
+      </tr>
+    </tbody>
+  </table>
+</p>
+
+<p>
 <%= link_to 'New Channel', new_channel_path %>
+</p>

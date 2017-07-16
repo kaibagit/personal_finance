@@ -15,6 +15,16 @@ class ChannelsController < ApplicationController
     @other = @total_cent-@total_lower_risk-@total_medium_risk-@total_high_risk
     @total_yuan = @total_cent/100.0
     @about_to_expire_financings = Financing.about_to_expire
+
+    #流动性
+    @current_cent = Financing.current_financings.inject(0) { |sum, e| sum += e.money_cent }
+    @one_month_fixed_cent = Financing.one_month_fixed_financings.inject(0) { |sum, e| sum += e.money_cent }
+    @three_month_fixed_cnet = Financing.three_month_fixed_financings.inject(0) { |sum, e| sum += e.money_cent }
+    @half_year_fixed_cent = Financing.half_year_fixed_financings.inject(0) { |sum, e| sum += e.money_cent }
+    @one_year_fixed_cent = Financing.one_year_fixed_financings.inject(0) { |sum, e| sum += e.money_cent }
+    @more_than_one_year_fixed_cent = Financing.more_than_one_year_fixed_financings.inject(0) { |sum, e| sum += e.money_cent }
+    @other_liquidity_cent = @total_cent-@current_cent-@one_month_fixed_cent-@three_month_fixed_cnet-@half_year_fixed_cent-@one_year_fixed_cent-@more_than_one_year_fixed_cent
+    #Financing.liquidity_debug
   end
 
   # GET /channels/1

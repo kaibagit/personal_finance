@@ -7,9 +7,86 @@ class Financing < ActiveRecord::Base
 	default_scope{order('paid_at DESC')}
 	before_save :compute
 
+	# 即将过期的投资
 	def self.about_to_expire
 		about_to_expire_time = Time.now + 1.month
 		Financing.where("status=? and exp_antedated<=?",'started',about_to_expire_time).reorder("exp_antedated")
+	end
+
+	# 活期投资
+	def self.current_financings
+		Financing.where("status=? and liquidity_type=?",'started','current').all
+	end
+
+	def self.one_month_fixed_financings
+		financings = Set.new
+		financings.merge(Financing.where("status=? and liquidity_type=? and horizon_unit=? and horizon=?",'started','fixed','month',1).reorder(nil).all)
+		financings.merge(Financing.where("status=? and liquidity_type=? and horizon_unit=? and horizon<=?",'started','fixed','day',31).reorder(nil).all)
+		financings
+	end
+
+	def self.three_month_fixed_financings
+		financings = Set.new
+		financings.merge(Financing.where("status=? and liquidity_type=? and horizon_unit=? and horizon>? and horizon<=?",'started','fixed','month',1,3).reorder(nil).all)
+		financings.merge(Financing.where("status=? and liquidity_type=? and horizon_unit=? and horizon>? and horizon<=?",'started','fixed','day',31,92).reorder(nil).all)
+		financings
+	end
+
+	def self.half_year_fixed_financings
+		Financing.where("status=? and liquidity_type=? and horizon_unit=? and horizon>? and horizon<=?",'started','fixed','month',3,6).all
+	end
+
+	def self.one_year_fixed_financings
+		financings = Set.new
+		financings.merge(Financing.where("status=? and liquidity_type=? and horizon_unit=? and horizon>?",'started','fixed','month',6).reorder(nil).all)
+		financings.merge(Financing.where("status=? and liquidity_type=? and horizon_unit=? and horizon=?",'started','fixed','year',1).all)
+		financings
+	end
+
+	def self.more_than_one_year_fixed_financings
+		Financing.where("status=? and liquidity_type=? and horizon_unit=? and horizon>?",'started','fixed','year',1).all
+	end
+
+	def self.liquidity_debug
+		financings = Set.new
+		Financing.where(:status => 'started').all.each{ |x|
+			financings.add x
+		}
+		puts "size:#{financings.size}"
+		puts "-size:#{Financing.current_financings.size}"
+		Financing.current_financings.each{ |x|
+			financings.delete x
+		}
+		puts "size:#{financings.size}"
+		puts "-size:#{Financing.one_month_fixed_financings.size}"
+		Financing.one_month_fixed_financings.each{ |x|
+			financings.delete x
+		}
+		puts "size:#{financings.size}"
+		puts "-size:#{Financing.three_month_fixed_financings.size}"
+		Financing.three_month_fixed_financings.each{ |x|
+			financings.delete x
+		}
+		puts "size:#{financings.size}"
+		puts "-size:#{Financing.half_year_fixed_financings.size}"
+		Financing.half_year_fixed_financings.each{ |x|
+			financings.delete x
+		}
+		puts "size:#{financings.size}"
+		puts "-size:#{Financing.one_year_fixed_financings.size}"
+		Financing.one_year_fixed_financings.each{ |x|
+			financings.delete x
+		}
+		puts "size:#{financings.size}"
+		puts "-size:#{Financing.more_than_one_year_fixed_financings.size}"
+		Financing.more_than_one_year_fixed_financings.each{ |x|
+			financings.delete x
+		}
+		puts "size:#{financings.size}"
+		puts '================'
+		financings.each{|x|
+			puts x.id
+		}
 	end
 
 	def compute
