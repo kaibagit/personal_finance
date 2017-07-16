@@ -40,6 +40,8 @@
 <font color='orange'>中等风险：</font><%= cent_to_yuan(@total_medium_risk) %>元（<%= format_to_percent(Float(@total_medium_risk)/@total_cent) %>）
 <font color='red'>高风险：</font><%= cent_to_yuan(@total_high_risk) %>元（<%= format_to_percent(Float(@total_high_risk)/@total_cent) %>）
 <font color='gray'>其他：</font><%= cent_to_yuan(@other) %>元（<%= div_to_percent(@other,@total_cent) %>）
+<br>
+平均利率：<%= div_to_percent(@average_rate,1.0) %>
 </p>
 
 <p>
@@ -81,44 +83,60 @@
         <th>流动性</th>
         <th>金额</th>
         <th>占比</th>
+        <th>投资数</th>
+        <th>平均利率</th>
       </tr>
     </thead>
 
     <tbody>
       <tr>
         <td>活期</td>
-        <td><%= @current_cent/100.0 %></td>
-        <td><%= div_to_percent(@current_cent.to_f,@total_cent) %></td>
+        <td><%= @current_financings[:cent]/100.0 %></td>
+        <td><%= div_to_percent(@current_financings[:cent].to_f,@total_cent) %></td>
+        <td><%= @current_financings[:size] %></td>
+        <td><%= div_to_percent(@current_financings[:average_rate],1.0) %></td>
       </tr>
       <tr>
         <td>一个月内</td>
-        <td><%= @one_month_fixed_cent/100.0 %></td>
-        <td><%= div_to_percent(@one_month_fixed_cent.to_f,@total_cent) %></td>
+        <td><%= @one_month_fixed_financings[:cent]/100.0 %></td>
+        <td><%= div_to_percent(@one_month_fixed_financings[:cent].to_f,@total_cent) %></td>
+        <td><%= @one_month_fixed_financings[:size] %></td>
+        <td><%= div_to_percent(@one_month_fixed_financings[:average_rate],1.0) %></td>
       </tr>
       <tr>
         <td>三个月内</td>
-        <td><%= @three_month_fixed_cnet/100.0 %></td>
-        <td><%= div_to_percent(@three_month_fixed_cnet.to_f,@total_cent) %></td>
+        <td><%= @three_month_fixed_financings[:cent]/100.0 %></td>
+        <td><%= div_to_percent(@three_month_fixed_financings[:cent].to_f,@total_cent) %></td>
+        <td><%= @three_month_fixed_financings[:size] %></td>
+        <td><%= div_to_percent(@three_month_fixed_financings[:average_rate],1.0) %></td>
       </tr>
       <tr>
         <td>半年内</td>
-        <td><%= @half_year_fixed_cent/100.0 %></td>
-        <td><%= div_to_percent(@half_year_fixed_cent.to_f,@total_cent) %></td>
+        <td><%= @half_year_fixed_financings[:cent]/100.0 %></td>
+        <td><%= div_to_percent(@half_year_fixed_financings[:cent].to_f,@total_cent) %></td>
+        <td><%= @half_year_fixed_financings[:size] %></td>
+        <td><%= div_to_percent(@half_year_fixed_financings[:average_rate],1.0) %></td>
       </tr>
       <tr>
         <td>一年内</td>
-        <td><%= @one_year_fixed_cent/100.0 %></td>
-        <td><%= div_to_percent(@one_year_fixed_cent.to_f,@total_cent) %></td>
+        <td><%= @one_year_fixed_financings[:cent]/100.0 %></td>
+        <td><%= div_to_percent(@one_year_fixed_financings[:cent].to_f,@total_cent) %></td>
+        <td><%= @one_year_fixed_financings[:size] %></td>
+        <td><%= div_to_percent(@one_year_fixed_financings[:average_rate],1.0) %></td>
       </tr>
       <tr>
         <td>一年以上</td>
-        <td><%= @more_than_one_year_fixed_cent/100.0 %></td>
-        <td><%= div_to_percent(@more_than_one_year_fixed_cent.to_f,@total_cent) %></td>
+        <td><%= @more_than_one_year_fixed_financings[:cent]/100.0 %></td>
+        <td><%= div_to_percent(@more_than_one_year_fixed_financings[:cent].to_f,@total_cent) %></td>
+        <td><%= @more_than_one_year_fixed_financings[:size] %></td>
+        <td><%= div_to_percent(@more_than_one_year_fixed_financings[:average_rate],1.0) %></td>
       </tr>
       <tr>
         <td>其他</td>
         <td><%= @other_liquidity_cent/100.0 %></td>
         <td><%= div_to_percent(@other_liquidity_cent.to_f,@total_cent) %></td>
+        <td></td>
+        <td></td>
       </tr>
     </tbody>
   </table>

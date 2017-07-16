@@ -16,14 +16,66 @@ class ChannelsController < ApplicationController
     @total_yuan = @total_cent/100.0
     @about_to_expire_financings = Financing.about_to_expire
 
-    #流动性
-    @current_cent = Financing.current_financings.inject(0) { |sum, e| sum += e.money_cent }
-    @one_month_fixed_cent = Financing.one_month_fixed_financings.inject(0) { |sum, e| sum += e.money_cent }
-    @three_month_fixed_cnet = Financing.three_month_fixed_financings.inject(0) { |sum, e| sum += e.money_cent }
-    @half_year_fixed_cent = Financing.half_year_fixed_financings.inject(0) { |sum, e| sum += e.money_cent }
-    @one_year_fixed_cent = Financing.one_year_fixed_financings.inject(0) { |sum, e| sum += e.money_cent }
-    @more_than_one_year_fixed_cent = Financing.more_than_one_year_fixed_financings.inject(0) { |sum, e| sum += e.money_cent }
-    @other_liquidity_cent = @total_cent-@current_cent-@one_month_fixed_cent-@three_month_fixed_cnet-@half_year_fixed_cent-@one_year_fixed_cent-@more_than_one_year_fixed_cent
+    # 流动性
+    # 活期
+    current_financings = Financing.current_financings
+    current_financings_cent = current_financings.inject(0) { |sum, e| sum += e.money_cent }
+    current_financings_rate = current_financings.inject(0.0) { |sum, e| sum += e.money_cent*e.exp_rate }
+    @current_financings = {
+      :cent => current_financings.inject(0) { |sum, e| sum += e.money_cent } ,
+      :size => current_financings.size ,
+      :average_rate => current_financings_rate/current_financings_cent
+    }
+    # 一个月内
+    one_month_fixed_financings = Financing.one_month_fixed_financings
+    one_month_fixed_financings_cent = one_month_fixed_financings.inject(0) { |sum, e| sum += e.money_cent }
+    one_month_fixed_financings_rate = current_financings.inject(0.0) { |sum, e| sum += e.money_cent*e.exp_rate }
+    @one_month_fixed_financings = {
+      :cent => one_month_fixed_financings.inject(0) { |sum, e| sum += e.money_cent } ,
+      :size => one_month_fixed_financings.size ,
+      :average_rate => one_month_fixed_financings_rate/one_month_fixed_financings_cent
+    }
+    # 三个月内
+    three_month_fixed_financings = Financing.three_month_fixed_financings
+    three_month_fixed_financings_cent = three_month_fixed_financings.inject(0) { |sum, e| sum += e.money_cent }
+    three_month_fixed_financings_rate = three_month_fixed_financings.inject(0.0) { |sum, e| sum += e.money_cent*e.exp_rate }
+    @three_month_fixed_financings = {
+      :cent => three_month_fixed_financings.inject(0) { |sum, e| sum += e.money_cent } ,
+      :size => three_month_fixed_financings.size ,
+      :average_rate => three_month_fixed_financings_rate/three_month_fixed_financings_cent
+    }
+    #半年内
+    half_year_fixed_financings = Financing.half_year_fixed_financings
+    half_year_fixed_financings_cent = half_year_fixed_financings.inject(0) { |sum, e| sum += e.money_cent }
+    half_year_fixed_financings_rate = half_year_fixed_financings.inject(0.0) { |sum, e| sum += e.money_cent*e.exp_rate }
+    @half_year_fixed_financings = {
+      :cent => half_year_fixed_financings.inject(0) { |sum, e| sum += e.money_cent } ,
+      :size => half_year_fixed_financings.size ,
+      :average_rate => half_year_fixed_financings_rate/half_year_fixed_financings_cent
+    }
+    # 一年内
+    one_year_fixed_financings = Financing.one_year_fixed_financings
+    one_year_fixed_financings_cent = one_year_fixed_financings.inject(0) { |sum, e| sum += e.money_cent }
+    one_year_fixed_financings_rate = one_year_fixed_financings.inject(0.0) { |sum, e| sum += e.money_cent*e.exp_rate }
+    @one_year_fixed_financings = {
+      :cent => one_year_fixed_financings.inject(0) { |sum, e| sum += e.money_cent } ,
+      :size => one_year_fixed_financings.size ,
+      :average_rate => one_year_fixed_financings_rate/one_year_fixed_financings_cent
+    }
+    # 一年以上
+    more_than_one_year_fixed_financings = Financing.more_than_one_year_fixed_financings
+    more_than_one_year_fixed_financings_cent = more_than_one_year_fixed_financings.inject(0) { |sum, e| sum += e.money_cent }
+    more_than_one_year_fixed_financings_rate = more_than_one_year_fixed_financings.inject(0.0) { |sum, e| sum += e.money_cent*e.exp_rate }
+    @more_than_one_year_fixed_financings = {
+      :cent => more_than_one_year_fixed_financings.inject(0) { |sum, e| sum += e.money_cent } ,
+      :size => more_than_one_year_fixed_financings.size ,
+      :average_rate => more_than_one_year_fixed_financings_rate/more_than_one_year_fixed_financings_cent
+    }
+
+    @other_liquidity_cent = @total_cent-current_financings_cent-one_month_fixed_financings_cent-three_month_fixed_financings_cent-
+      half_year_fixed_financings_cent-one_year_fixed_financings_cent-more_than_one_year_fixed_financings_cent
+
+    @average_rate = (current_financings_rate+one_month_fixed_financings_rate+three_month_fixed_financings_rate+half_year_fixed_financings_rate+one_year_fixed_financings_rate+more_than_one_year_fixed_financings_rate)/@total_cent
     #Financing.liquidity_debug
   end
 
