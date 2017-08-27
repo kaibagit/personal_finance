@@ -17,7 +17,54 @@ class ChannelsController < ApplicationController
     @about_to_expire_financings = Financing.about_to_expire
 
     # 流动性
-    # 活期
+    # 一个月内到期
+    expires_in_one_month = Financing.expires_in_one_month
+    expires_in_one_month_cent = expires_in_one_month.inject(0) { |sum, e| sum += e.money_cent }
+    expires_in_one_month_rage = expires_in_one_month.inject(0.0) { |sum, e| sum += e.money_cent*e.exp_rate }
+    @expires_in_one_month = {
+      :cent => expires_in_one_month.inject(0) { |sum, e| sum += e.money_cent } ,
+      :size => expires_in_one_month.size ,
+      :average_rate => expires_in_one_month_rage/expires_in_one_month_cent
+    }
+    # 三个月内到期
+    expires_in_three_month = Financing.expires_in_three_month
+    expires_in_three_month_cent = expires_in_three_month.inject(0) { |sum, e| sum += e.money_cent }
+    expires_in_three_month_rate = expires_in_three_month.inject(0.0) { |sum, e| sum += e.money_cent*e.exp_rate }
+    @expires_in_three_month = {
+      :cent => expires_in_three_month.inject(0) { |sum, e| sum += e.money_cent } ,
+      :size => expires_in_three_month.size ,
+      :average_rate => expires_in_three_month_rate/expires_in_three_month_cent
+    }
+    # 半年内到期
+    expires_in_half_year = Financing.expires_in_half_year
+    expires_in_half_year_cent = expires_in_half_year.inject(0) { |sum, e| sum += e.money_cent }
+    expires_in_half_year_rate = expires_in_half_year.inject(0.0) { |sum, e| sum += e.money_cent*e.exp_rate }
+    @expires_in_half_year = {
+      :cent => expires_in_half_year.inject(0) { |sum, e| sum += e.money_cent } ,
+      :size => expires_in_half_year.size ,
+      :average_rate => expires_in_half_year_rate/expires_in_half_year_cent
+    }
+    # 一年内到期
+    expires_in_one_year = Financing.expires_in_one_year
+    expires_in_one_year_cent = expires_in_one_year.inject(0) { |sum, e| sum += e.money_cent }
+    expires_in_one_year_rate = expires_in_one_year.inject(0.0) { |sum, e| sum += e.money_cent*e.exp_rate }
+    @expires_in_one_year = {
+      :cent => expires_in_one_year.inject(0) { |sum, e| sum += e.money_cent } ,
+      :size => expires_in_one_year.size ,
+      :average_rate => expires_in_one_year_rate/expires_in_one_year_cent
+    }
+    # 2年内到期
+    expires_in_more_than_two_year = Financing.expires_in_more_than_two_year
+    expires_in_more_than_two_year_cent = expires_in_more_than_two_year.inject(0) { |sum, e| sum += e.money_cent }
+    expires_in_more_than_two_year_rate = expires_in_more_than_two_year.inject(0.0) { |sum, e| sum += e.money_cent*e.exp_rate }
+    @expires_in_more_than_two_year = {
+      :cent => expires_in_more_than_two_year.inject(0) { |sum, e| sum += e.money_cent } ,
+      :size => expires_in_more_than_two_year.size ,
+      :average_rate => expires_in_more_than_two_year_rate/expires_in_more_than_two_year_cent
+    }
+
+    # 流动性偏好
+    # 活期期限
     current_financings = Financing.current_financings
     current_financings_cent = current_financings.inject(0) { |sum, e| sum += e.money_cent }
     current_financings_rate = current_financings.inject(0.0) { |sum, e| sum += e.money_cent*e.exp_rate }
@@ -26,16 +73,16 @@ class ChannelsController < ApplicationController
       :size => current_financings.size ,
       :average_rate => current_financings_rate/current_financings_cent
     }
-    # 一个月内
+    # 一个月内期限
     one_month_fixed_financings = Financing.one_month_fixed_financings
     one_month_fixed_financings_cent = one_month_fixed_financings.inject(0) { |sum, e| sum += e.money_cent }
-    one_month_fixed_financings_rate = current_financings.inject(0.0) { |sum, e| sum += e.money_cent*e.exp_rate }
+    one_month_fixed_financings_rate = one_month_fixed_financings.inject(0.0) { |sum, e| sum += e.money_cent*e.exp_rate }
     @one_month_fixed_financings = {
       :cent => one_month_fixed_financings.inject(0) { |sum, e| sum += e.money_cent } ,
       :size => one_month_fixed_financings.size ,
       :average_rate => one_month_fixed_financings_rate/one_month_fixed_financings_cent
     }
-    # 三个月内
+    # 三个月内期限
     three_month_fixed_financings = Financing.three_month_fixed_financings
     three_month_fixed_financings_cent = three_month_fixed_financings.inject(0) { |sum, e| sum += e.money_cent }
     three_month_fixed_financings_rate = three_month_fixed_financings.inject(0.0) { |sum, e| sum += e.money_cent*e.exp_rate }
@@ -44,7 +91,7 @@ class ChannelsController < ApplicationController
       :size => three_month_fixed_financings.size ,
       :average_rate => three_month_fixed_financings_rate/three_month_fixed_financings_cent
     }
-    #半年内
+    #半年内期限
     half_year_fixed_financings = Financing.half_year_fixed_financings
     half_year_fixed_financings_cent = half_year_fixed_financings.inject(0) { |sum, e| sum += e.money_cent }
     half_year_fixed_financings_rate = half_year_fixed_financings.inject(0.0) { |sum, e| sum += e.money_cent*e.exp_rate }
@@ -53,7 +100,7 @@ class ChannelsController < ApplicationController
       :size => half_year_fixed_financings.size ,
       :average_rate => half_year_fixed_financings_rate/half_year_fixed_financings_cent
     }
-    # 一年内
+    # 一年内期限
     one_year_fixed_financings = Financing.one_year_fixed_financings
     one_year_fixed_financings_cent = one_year_fixed_financings.inject(0) { |sum, e| sum += e.money_cent }
     one_year_fixed_financings_rate = one_year_fixed_financings.inject(0.0) { |sum, e| sum += e.money_cent*e.exp_rate }
@@ -62,7 +109,7 @@ class ChannelsController < ApplicationController
       :size => one_year_fixed_financings.size ,
       :average_rate => one_year_fixed_financings_rate/one_year_fixed_financings_cent
     }
-    # 一年以上
+    # 一年以上期限
     more_than_one_year_fixed_financings = Financing.more_than_one_year_fixed_financings
     more_than_one_year_fixed_financings_cent = more_than_one_year_fixed_financings.inject(0) { |sum, e| sum += e.money_cent }
     more_than_one_year_fixed_financings_rate = more_than_one_year_fixed_financings.inject(0.0) { |sum, e| sum += e.money_cent*e.exp_rate }

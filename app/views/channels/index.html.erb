@@ -98,6 +98,73 @@
       </tr>
       <tr>
         <td>一个月内</td>
+        <td><%= @expires_in_one_month[:cent]/100.0 %></td>
+        <td><%= div_to_percent(@expires_in_one_month[:cent].to_f,@total_cent) %></td>
+        <td><%= @expires_in_one_month[:size] %></td>
+        <td><%= div_to_percent(@expires_in_one_month[:average_rate],1.0) %></td>
+      </tr>
+      <tr>
+        <td>三个月内</td>
+        <td><%= @expires_in_three_month[:cent]/100.0 %></td>
+        <td><%= div_to_percent(@expires_in_three_month[:cent].to_f,@total_cent) %></td>
+        <td><%= @expires_in_three_month[:size] %></td>
+        <td><%= div_to_percent(@expires_in_three_month[:average_rate],1.0) %></td>
+      </tr>
+      <tr>
+        <td>半年内</td>
+        <td><%= @expires_in_half_year[:cent]/100.0 %></td>
+        <td><%= div_to_percent(@expires_in_half_year[:cent].to_f,@total_cent) %></td>
+        <td><%= @expires_in_half_year[:size] %></td>
+        <td><%= div_to_percent(@expires_in_half_year[:average_rate],1.0) %></td>
+      </tr>
+      <tr>
+        <td>一年内</td>
+        <td><%= @expires_in_one_year[:cent]/100.0 %></td>
+        <td><%= div_to_percent(@expires_in_one_year[:cent].to_f,@total_cent) %></td>
+        <td><%= @expires_in_one_year[:size] %></td>
+        <td><%= div_to_percent(@expires_in_one_year[:average_rate],1.0) %></td>
+      </tr>
+      <tr>
+        <td>2年以上</td>
+        <td><%= @expires_in_more_than_two_year[:cent]/100.0 %></td>
+        <td><%= div_to_percent(@expires_in_more_than_two_year[:cent].to_f,@total_cent) %></td>
+        <td><%= @expires_in_more_than_two_year[:size] %></td>
+        <td><%= div_to_percent(@expires_in_more_than_two_year[:average_rate],1.0) %></td>
+      </tr>
+      <tr>
+        <td>其他</td>
+        <td><%= @other_liquidity_cent/100.0 %></td>
+        <td><%= div_to_percent(@other_liquidity_cent.to_f,@total_cent) %></td>
+        <td></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+</p>
+
+<p>
+  <b>流动性偏好：</b>
+  <table>
+    <thead>
+      <tr>
+        <th>流动性</th>
+        <th>金额</th>
+        <th>占比</th>
+        <th>投资数</th>
+        <th>平均利率</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr>
+        <td>活期</td>
+        <td><%= @current_financings[:cent]/100.0 %></td>
+        <td><%= div_to_percent(@current_financings[:cent].to_f,@total_cent) %></td>
+        <td><%= @current_financings[:size] %></td>
+        <td><%= div_to_percent(@current_financings[:average_rate],1.0) %></td>
+      </tr>
+      <tr>
+        <td>一个月内</td>
         <td><%= @one_month_fixed_financings[:cent]/100.0 %></td>
         <td><%= div_to_percent(@one_month_fixed_financings[:cent].to_f,@total_cent) %></td>
         <td><%= @one_month_fixed_financings[:size] %></td>

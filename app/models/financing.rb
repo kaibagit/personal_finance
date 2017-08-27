@@ -13,6 +13,41 @@ class Financing < ActiveRecord::Base
 		Financing.where("status=? and exp_antedated<=?",'started',about_to_expire_time).reorder("exp_antedated")
 	end
 
+	#一个月内到期
+	def self.expires_in_one_month
+		about_to_expire_time = Time.now + 1.month
+		financings = Financing.where("status=? and exp_antedated<=?",'started',about_to_expire_time).reorder("exp_antedated")
+		financings+self.current_financings
+	end
+
+	#三个月内到期
+	def self.expires_in_three_month
+		about_to_expire_time = Time.now + 3.month
+		financings = Financing.where("status=? and exp_antedated<=?",'started',about_to_expire_time).reorder("exp_antedated")
+		financings+self.current_financings
+	end
+
+	#半年内到期
+	def self.expires_in_half_year
+		about_to_expire_time = Time.now + 6.month
+		financings = Financing.where("status=? and exp_antedated<=?",'started',about_to_expire_time).reorder("exp_antedated")
+		financings+self.current_financings
+	end
+
+	#一年内到期
+	def self.expires_in_one_year
+		about_to_expire_time = Time.now + 1.year
+		financings = Financing.where("status=? and exp_antedated<=?",'started',about_to_expire_time).reorder("exp_antedated")
+		financings+self.current_financings
+	end
+
+	#2年内到期
+	def self.expires_in_more_than_two_year
+		about_to_expire_time = Time.now + 2.year
+		financings = Financing.where("status=? and exp_antedated<=?",'started',about_to_expire_time).reorder("exp_antedated")
+		financings+self.current_financings
+	end
+
 	# 活期投资
 	def self.current_financings
 		Financing.where("status=? and liquidity_type=?",'started','current').all
