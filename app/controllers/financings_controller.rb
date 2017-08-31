@@ -20,6 +20,24 @@ class FinancingsController < ApplicationController
     end
   end
 
+  def current
+    @financings = Financing.current_financings
+    @total_cent = 0
+    @lower_risk_money = @medium_risk_money = @high_risk_money = 0
+    @financings.each do |f|
+      if f.started?
+        @total_cent+=f.money_yuan
+        if f.lower_risk?
+          @lower_risk_money+=f.money_cent
+        elsif f.medium_risk?
+          @medium_risk_money+=f.money_cent
+        elsif f.high_risk?
+          @high_risk_money+=f.money_cent
+        end
+      end
+    end
+  end
+
   # GET /financings/1
   # GET /financings/1.json
   def show

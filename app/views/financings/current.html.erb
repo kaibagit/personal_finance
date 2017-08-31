@@ -1,0 +1,72 @@
+<h1>活期</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>名称</th>
+      <th>流动性</th>
+      <th>金额(元)</th>
+      <th>付款时间</th>
+      <th>到期时间(期望/实际)</th>
+      <th>收入(期望/实际)元</th>
+      <th>利率(期望/实际)</th>
+      <th>风险</th>
+      <th>状态</th>
+      <th>操作</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @financings.each do |financing| %>
+      <tr>
+        <td><%= financing.name %></td>
+        <td>
+            <% if financing.current? %>
+              活期
+            <% else %>
+              定期
+            <% end %>
+        </td>
+        <td><%= financing.money_yuan %></td>
+        <td><%= financing.paid_at.strftime('%Y-%m-%d %H:%M:%S') %></td>
+        <td><%= financing.exp_antedated %> / <%= financing.act_antedated %></td>
+        <td><%= financing.exp_earning_yuan %> / <%= financing.act_earning_yuan %></td>
+        <td><%= financing.exp_rate_percent %>% / <%= financing.act_rate_percent %>%</td>
+        <td>
+          <% if financing.lower_risk? %>
+            <font color='green'>低风险</font>
+          <% elsif financing.medium_risk? %>
+            <font color='orange'>中等风险</font>
+          <% elsif financing.high_risk? %>
+            <font color='red'>高风险</font>
+          <% else %>
+            <%= financing.risk %>
+          <% end %>
+        </td>
+        <td>
+          <% if financing.finished? %>
+            <font color='green'>已完成</font>
+          <% else %>
+            <%= financing.status %>
+          <% end %>
+        </td>
+        <td>
+          <% if financing.started? %>
+            <%= link_to('完成', {:controller => 'financings', :action => 'finish_view', :id => financing.id}) %>
+          <% end %>
+          <%= link_to 'Show', financing %>
+          <%= link_to 'Edit', edit_financing_path(financing) %>
+          <%= link_to 'Destroy', financing, method: :delete, data: { confirm: 'Are you sure?' } %>
+      </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+<br>
+合计：<%= @total_cent/100 %>元
+<font color='green'>低风险：</font><%= @lower_risk_money/100.0 %>元（<%= div_to_percent(@lower_risk_money,@total_cent) %>）
+<font color='orange'>中等风险：</font><%= @medium_risk_money/100.0 %>元（<%= div_to_percent(@medium_risk_money,@total_cent) %>）
+<font color='red'>高风险：</font><%= @high_risk_money/100.0 %>元（<%= div_to_percent(@high_risk_money,@total_cent) %>）
+<br>
+
+<%= link_to '返回', channels_path %>

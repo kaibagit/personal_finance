@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
 
+  get 'financings/current' => 'financings#current'
   get 'financings/finish_view' => 'financings#finish_view'
   patch 'financings/finish' => 'financings#finish'
   resources :financings
