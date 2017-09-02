@@ -1,0 +1,26 @@
+<h1><%= @financing.name %></h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>金额（元）</th>
+      <th>付款时间</th>
+      <th>计息时间</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @financing_items.each do |financing_item| %>
+      <tr>
+        <td><%= financing_item.money_yuan %></td>
+        <td><%= financing_item.paid_at.strftime('%Y-%m-%d %H:%M:%S') %></td>
+        <td><%= financing_item.interested_at.strftime('%Y-%m-%d') %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to('追加投资',{:controller=> 'financing_items', :action => 'new', :financing_id => @financing.id}) %>
+<%= link_to('返回',{:controller => 'financings', :action => 'index', :channel_id => @financing.channel.id }) %>

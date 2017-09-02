@@ -54,6 +54,9 @@
           <% if financing.started? %>
             <%= link_to('完成', {:controller => 'financings', :action => 'finish_view', :id => financing.id}) %>
           <% end %>
+          <% if financing.started? %>
+            <%= link_to('追加', {:controller => 'financing_items', :action => 'index', :financing_id => financing.id}) %>
+          <% end %>
           <%= link_to 'Show', financing %>
           <%= link_to 'Edit', edit_financing_path(financing) %>
           <%= link_to 'Destroy', financing, method: :delete, data: { confirm: 'Are you sure?' } %>

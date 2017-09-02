@@ -1,11 +1,12 @@
 class Financing < ActiveRecord::Base
 	belongs_to :channel
+	has_many :items,:class_name=> 'FinancingItem'
 	enum status: {started:'started',finished:'finished'}
 	enum horizon_unit: {day:'day',month:'month',year:'year'}
 	enum risk: {lower_risk:'lower_risk',medium_risk:'medium_risk',high_risk:'high_risk'}
 	enum liquidity_type:{current:'current',fixed:'fixed'}
 	default_scope{order('paid_at DESC')}
-	before_save :compute
+	#before_save :compute
 
 	# 即将过期的投资
 	def self.about_to_expire
@@ -124,6 +125,28 @@ class Financing < ActiveRecord::Base
 		}
 	end
 
+	#追加投资
+	def add_to(money_cent)
+		puts items.size
+		if items.empty?
+			item = default_item
+			item.save
+		end
+		self.money_cent+=money_cent
+		save
+	end
+
+	def default_item
+		item = FinancingItem.new
+		item.financing = self
+		item.money_cent = self.money_cent
+		item.paid_at = paid_at
+		item.interested_at = interested_at
+		item.created_at = created_at
+		item.updated_at = updated_at
+		return item
+	end
+
 	def compute
 		puts 'compute'
 		self.status='started'
@@ -153,15 +176,14 @@ class Financing < ActiveRecord::Base
 			end
 
 			# 投资完成
-			unless act_antedated.blank? and act_earning.blank?
+			if finished?
 				total_days = (act_antedated-interested_at).to_i+1
 				# 利率 = (利息/本金)/(计息天数/365) = 利息*365/本金*计息天数
 				self.act_rate=Float(act_earning*365)/(money_cent*total_days)
-				self.status='finished'
 				channel.earning act_earning
 			end
 		else	#活期
-			unless id.blank?
+			if finished?
 				total_days = (act_antedated-interested_at).to_i+1
 				if act_earning.blank?
 					self.act_rate = exp_rate
@@ -171,18 +193,87 @@ class Financing < ActiveRecord::Base
 					# 利率 = (利息/本金)/(计息天数/365) = 利息*365/本金*计息天数
 					self.act_rate=Float(act_earning*365)/(money_cent*total_days)
 				end
-
-				self.status='finished'
 				channel.earning self.act_earning
 			end
 		end
 
-
-
 	end
 
-	def finish(attributes)
-		update(attributes)
+	#开始投资
+	def to_start
+		self.status='started'
+		if fixed?
+			#计算期望到期时间
+			if day?
+				self.exp_antedated=(interested_at.advance(days:self.horizon))
+			elsif month?
+				self.exp_antedated=(interested_at.advance(months:self.horizon))
+			elsif year?
+				self.exp_antedated=(interested_at.advance(years:self.horizon))
+			else
+				raise 'unknown horizon_unit'
+			end
+
+			#计算期望到期收益
+			if exp_earning.blank?
+				if day?
+					self.exp_earning=money_cent*exp_rate*horizon/365
+				elsif month?
+					self.exp_earning=money_cent*exp_rate*horizon/12
+				elsif year?
+					self.exp_earning=money_cent*exp_rate*horizon
+				else
+					raise 'unknown horizon_unit'
+				end
+			end
+		end
+		save
+	end
+
+	#完成投资
+	def to_finish(attributes)
+		update_attributes(attributes)
+		self.status='finished'
+
+		#加权天数
+		weighting_days = 0
+		if self.items.empty?
+			weighting_days = (act_antedated-interested_at).to_i+1
+		else
+			sum = 0;
+			self.items.each{|item|
+				if item.money_cent > 0	#投资
+					logger.debug("投资A=#{act_antedated}")
+					logger.debug("投资A=#{item.interested_at}")
+					invest_days = (act_antedated-item.interested_at).to_i+1
+					logger.debug("投资=#{invest_days}")
+					sum = sum + ( invest_days*item.money_cent )
+				else	#赎回
+					logger.info(item.paid_at.class.instance_methods)
+					compensate_days = (act_antedated-item.paid_at.to_date).to_i		#赎回金额多计算了，需要补偿
+					logger.debug("赎回=#{compensate_days}")
+					sum = sum + ( compensate_days*item.money_cent )
+				end
+			}
+			weighting_days = sum/self.money_cent
+		end
+		logger.debug("天数=#{weighting_days}")
+		# 计算利率
+		if fixed?
+			# 利率 = (利息/本金)/(计息天数/365) = 利息*365/本金*加权天数
+			self.act_rate=Float(act_earning*365)/(money_cent*weighting_days)
+		else #活期
+			if act_earning.blank?
+				self.act_rate = exp_rate
+				# 收益 = 本金*(计息天数/365)*利率
+				self.act_earning = money_cent*total_days/365*exp_rate
+			else
+				# 利率 = (利息/本金)/(计息天数/365) = 利息*365/本金*加权天数
+				self.act_rate=Float(act_earning*365)/(money_cent*weighting_days)
+			end
+		end
+		channel.earning self.act_earning
+		save
 	end
 
 	def money_yuan

@@ -1,0 +1,29 @@
+<%= form_for(@financing_item) do |f| %>
+  <% if @financing_item.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@financing_item.errors.count, "error") %> prohibited this financing_item from being saved:</h2>
+
+      <ul>
+      <% @financing_item.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+  <input type="hidden" name="financing_item[financing_id]" value="<%= @financing_item.financing.id %>">
+  <div class="field">
+    <%= f.label :金额 %><br>
+    <%= f.text_field :money_yuan %> 元
+  </div>
+  <div class="field">
+    <%= f.label :支付时间 %><br>
+    <%= f.datetime_select :paid_at %>
+  </div>
+  <div class="field">
+    <%= f.label :计息时间 %><br>
+    <%= f.date_select :interested_at %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

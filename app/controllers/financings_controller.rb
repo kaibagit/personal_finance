@@ -60,7 +60,7 @@ class FinancingsController < ApplicationController
     @financing = Financing.new(financing_params)
 
     respond_to do |format|
-      if @financing.save
+      if @financing.to_start
         #format.html { redirect_to @financing, notice: 'Financing was successfully created.' }
 				format.html { redirect_to action: "index",channel_id: @financing.channel_id }
         format.json { render :show, status: :created, location: @financing }
@@ -106,7 +106,7 @@ class FinancingsController < ApplicationController
   def finish
     puts @financing.attributes
 		respond_to do |format|
-      if @financing.finish(financing_params)
+      if @financing.to_finish(financing_params)
 				format.html { redirect_to action: "index",channel_id: @financing.channel_id }
         format.json { render :show, status: :ok, location: @financing }
       else

@@ -1,0 +1,24 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Financing:</strong>
+  <%= @financing_item.financing_id %>
+</p>
+
+<p>
+  <strong>Money cent:</strong>
+  <%= @financing_item.money_cent %>
+</p>
+
+<p>
+  <strong>Paid at:</strong>
+  <%= @financing_item.paid_at %>
+</p>
+
+<p>
+  <strong>Interested at:</strong>
+  <%= @financing_item.interested_at %>
+</p>
+
+<%= link_to 'Edit', edit_financing_item_path(@financing_item) %> |
+<%= link_to 'Back', financing_items_path %>

@@ -1,15 +1,24 @@
 Rails.application.routes.draw do
 
+  resources :financing_items
+
   root :to => 'channels#index'
 
   get 'financings/current' => 'financings#current'
   get 'financings/finish_view' => 'financings#finish_view'
   patch 'financings/finish' => 'financings#finish'
+  get 'financings/:financing_id/items' => 'financing_items#index'
+
   resources :financings
+  # resources :financings do
+  #   resources :items
+  # end
 
   resources :expenses
 
   resources :channels
+
+
 
 
 

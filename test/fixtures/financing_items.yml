@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  financing_id: 1
+  money_cent: 1
+  paid_at: 
+  interested_at: 2017-09-02
+
+two:
+  financing_id: 1
+  money_cent: 1
+  paid_at: 
+  interested_at: 2017-09-02
