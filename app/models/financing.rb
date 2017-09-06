@@ -266,7 +266,7 @@ class Financing < ActiveRecord::Base
 			if act_earning.blank?
 				self.act_rate = exp_rate
 				# 收益 = 本金*(计息天数/365)*利率
-				self.act_earning = money_cent*total_days/365*exp_rate
+				self.act_earning = money_cent*weighting_days/365*exp_rate
 			else
 				# 利率 = (利息/本金)/(计息天数/365) = 利息*365/本金*加权天数
 				self.act_rate=Float(act_earning*365)/(money_cent*weighting_days)
