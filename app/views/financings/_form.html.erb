@@ -37,6 +37,10 @@
     <%= f.text_field :exp_rate_percent %> %
   </div>
   <div class="field">
+    <%= f.label '方向' %><br>
+    <%= select("financing","orientation_id",Orientation.all.map {|o| [o.name,o.id]}) %>
+  </div>
+  <div class="field">
     <%= f.label '风险' %><br>
     <%= select("financing","risk",{"低风险" => "lower_risk", "中等风险" => "medium_risk","高风险" => "high_risk"}) %>
   </div>

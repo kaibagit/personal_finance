@@ -11,6 +11,7 @@
       <th>收入(期望/实际)元</th>
       <th>利率(期望/实际)</th>
       <th>风险</th>
+      <th>方向</th>
       <th>状态</th>
       <th>操作</th>
     </tr>
@@ -43,6 +44,7 @@
             <%= financing.risk %>
           <% end %>
         </td>
+        <td><%= financing.orientation&.name %></td>
         <td>
           <% if financing.finished? %>
             <font color='green'>已完成</font>

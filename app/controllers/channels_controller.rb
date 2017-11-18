@@ -124,6 +124,13 @@ class ChannelsController < ApplicationController
 
     @average_rate = (current_financings_rate+one_month_fixed_financings_rate+three_month_fixed_financings_rate+half_year_fixed_financings_rate+one_year_fixed_financings_rate+more_than_one_year_fixed_financings_rate)/@total_cent
     #Financing.liquidity_debug
+
+    @orientation_stat = Hash.new
+    Orientation.all.each{ |o|
+      total_money = Financing.find_started_by_orientation_id(o.id).map(&:money_cent).reduce(0, :+)
+      @orientation_stat[o] = total_money
+      #orientation_stat.store(o.name,total_money)
+    }
   end
 
   # 总计金额

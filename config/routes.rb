@@ -1,5 +1,7 @@
 Rails.application.routes.draw do
 
+  resources :orientations
+
   resources :financing_items
 
   root :to => 'channels#index'

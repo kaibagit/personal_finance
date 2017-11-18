@@ -1,5 +1,6 @@
 <h1>渠道</h1>
-
+<b>投资方向管理：</b><a href="orientations">链接</a>
+<p></p>
 <table>
   <thead>
     <tr>
@@ -205,6 +206,29 @@
         <td></td>
         <td></td>
       </tr>
+    </tbody>
+  </table>
+</p>
+
+<p>
+  <b>投资方向：</b>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>金额（元）</th>
+        <th>占比</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <% @orientation_stat.each do |orientation,money_cent| %>
+        <tr>
+          <td><%= orientation.name %></td>
+          <td><%= money_cent/100.0 %></td>
+          <td><%= div_to_percent(money_cent.to_f,@total_cent) %></td>
+        </tr>
+      <% end %>
     </tbody>
   </table>
 </p>

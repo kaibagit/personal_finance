@@ -1,5 +1,6 @@
 class Financing < ActiveRecord::Base
 	belongs_to :channel
+	belongs_to :orientation
 	has_many :items,:class_name=> 'FinancingItem'
 	enum status: {started:'started',finished:'finished'}
 	enum horizon_unit: {day:'day',month:'month',year:'year'}
@@ -81,6 +82,11 @@ class Financing < ActiveRecord::Base
 
 	def self.more_than_one_year_fixed_financings
 		Financing.where("status=? and liquidity_type=? and horizon_unit=? and horizon>?",'started','fixed','year',1).all
+	end
+
+	# 已开始的指定方向投资
+	def self.find_started_by_orientation_id(orientation_id)
+		Financing.where("status=? and orientation_id=?",'started',orientation_id).all
 	end
 
 	def self.liquidity_debug
