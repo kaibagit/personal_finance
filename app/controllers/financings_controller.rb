@@ -4,7 +4,15 @@ class FinancingsController < ApplicationController
   # GET /financings
   # GET /financings.json
   def index
+    @status = params['status']
 		@channel = Channel.find(params['channel_id'])
+    # sql = 'channel_id = ?'
+    # conditions = [sql,@channel.id]
+    # unless @status.blank?
+    #   sql << ' and status = ?'
+    #   conditions << @status
+    # end
+    # @financings = Financing.where(conditions)
     @financings = Financing.where(:channel => @channel)
     @lower_risk_money = @medium_risk_money = @high_risk_money = 0
     @financings.each do |f|

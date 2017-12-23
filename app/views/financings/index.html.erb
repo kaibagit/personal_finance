@@ -1,5 +1,38 @@
 <h1><%= @channel.name %></h1>
 
+<p>
+  进度：
+  <input type="radio" name="status" value="" />全部
+  <input type="radio" name="status" value="started"/>进行中
+  <input type="radio" name="status" value="finished" />已完成
+</p>
+<script type="text/javascript">
+  $(document).ready(
+  	function(){
+  		$("input:radio[value='<%=@status%>']").attr('checked','true');
+      $("input:radio[name='status']").each(function(){
+        $(this).bind('change',function(event){
+        	selectStatus();
+        });
+      })
+      selectStatus();
+  	}
+  );
+  function selectStatus() {
+    var current = $("input[name='status']:checked").val();
+    $("td[name='td_status']").each(function(){
+      var value = $(this).data('status');
+      if(current == ''){
+        $(this).parent().show();
+      }else if(value == current){
+        $(this).parent().show();
+      }else{
+        $(this).parent().hide();
+      }
+    });
+  }
+</script>
+
 <table>
   <thead>
     <tr>
@@ -45,7 +78,7 @@
           <% end %>
         </td>
         <td><%= financing.orientation&.name %></td>
-        <td>
+        <td name='td_status' data-status='<%=financing.status%>'>
           <% if financing.finished? %>
             <font color='green'>已完成</font>
           <% else %>
