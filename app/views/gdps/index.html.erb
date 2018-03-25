@@ -1,0 +1,335 @@
+<h1>Listing gdps</h1>
+
+<script src="echarts.min.js"></script>
+<h2>M2</h2>
+<!-- 为ECharts准备一个具备大小（宽高）的Dom -->
+<div id="main2" style="width: 1800px;height:400px;"></div>
+<script type="text/javascript">
+    // 基于准备好的dom，初始化echarts实例
+    var myChart = echarts.init(document.getElementById('main2'));
+
+    option = {
+        tooltip: {
+            trigger: 'axis',
+            axisPointer: {
+                type: 'cross',
+                crossStyle: {
+                    color: '#999'
+                }
+            }
+        },
+        toolbox: {
+            feature: {
+                dataView: {show: true, readOnly: false},
+                magicType: {show: true, type: ['line', 'bar']},
+                restore: {show: true},
+                saveAsImage: {show: true}
+            }
+        },
+        legend: {
+            data:['M2','M2同比增长','M2环比增长']
+        },
+        xAxis: [
+            {
+                type: 'category',
+                data: [
+                  <% @reverse_gdps.each do |gdp| %>
+                    '<%= gdp.month %>',
+                  <% end %>
+                ],
+                //data: ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'],
+                axisPointer: {
+                    type: 'shadow'
+                }
+            }
+        ],
+        yAxis: [
+            {
+                type: 'value',
+                name: '数量',
+                min: 0,
+                max: 2000000,
+                interval: 200000,
+                axisLabel: {
+                    formatter: '{value} 亿元'
+                }
+            },
+            {
+                type: 'value',
+                name: '增长率',
+                min: -5,
+                max: 30,
+                interval: 5,
+                axisLabel: {
+                    formatter: '{value} %'
+                }
+            }
+        ],
+        series: [
+            {
+                name:'M2',
+                type:'bar',
+                data:[
+                  <% @reverse_gdps.each do |gdp| %>
+                    '<%= gdp.m2.to_f %>',
+                  <% end %>
+                ]
+            },
+            {
+                name:'M2同比增长',
+                type:'line',
+                yAxisIndex: 1,
+                data:[
+                  <% @reverse_gdps.each do |gdp| %>
+                    '<%= gdp.m2_yoy_growth.sub('%','').to_f %>',
+                  <% end %>
+                ]
+            },
+            {
+                name:'M2环比增长',
+                type:'line',
+                yAxisIndex: 1,
+                data:[
+                  <% @reverse_gdps.each do |gdp| %>
+                    '<%= gdp.m2_chain_growth.sub('%','').to_f %>',
+                  <% end %>
+                ]
+            }
+        ]
+    };
+
+    // 使用刚指定的配置项和数据显示图表。
+    myChart.setOption(option);
+</script>
+
+<h2>M1</h2>
+<!-- 为ECharts准备一个具备大小（宽高）的Dom -->
+<div id="main1" style="width: 1800px;height:400px;"></div>
+<script type="text/javascript">
+    // 基于准备好的dom，初始化echarts实例
+    var myChart = echarts.init(document.getElementById('main1'));
+
+    option = {
+        tooltip: {
+            trigger: 'axis',
+            axisPointer: {
+                type: 'cross',
+                crossStyle: {
+                    color: '#999'
+                }
+            }
+        },
+        toolbox: {
+            feature: {
+                dataView: {show: true, readOnly: false},
+                magicType: {show: true, type: ['line', 'bar']},
+                restore: {show: true},
+                saveAsImage: {show: true}
+            }
+        },
+        legend: {
+            data:['M1','M1同比增长','M1环比增长']
+        },
+        xAxis: [
+            {
+                type: 'category',
+                data: [
+                  <% @reverse_gdps.each do |gdp| %>
+                    '<%= gdp.month %>',
+                  <% end %>
+                ],
+                //data: ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'],
+                axisPointer: {
+                    type: 'shadow'
+                }
+            }
+        ],
+        yAxis: [
+            {
+                type: 'value',
+                name: '数量',
+                min: 0,
+                max: 2000000,
+                interval: 200000,
+                axisLabel: {
+                    formatter: '{value} 亿元'
+                }
+            },
+            {
+                type: 'value',
+                name: '增长率',
+                min: -20,
+                max: 30,
+                interval: 5,
+                axisLabel: {
+                    formatter: '{value} %'
+                }
+            }
+        ],
+        series: [
+            {
+                name:'M1',
+                type:'bar',
+                data:[
+                  <% @reverse_gdps.each do |gdp| %>
+                    '<%= gdp.m1.to_f %>',
+                  <% end %>
+                ]
+            },
+            {
+                name:'M1同比增长',
+                type:'line',
+                yAxisIndex: 1,
+                data:[
+                  <% @reverse_gdps.each do |gdp| %>
+                    '<%= gdp.m1_yoy_growth.sub('%','').to_f %>',
+                  <% end %>
+                ]
+            }
+        ]
+    };
+
+    // 使用刚指定的配置项和数据显示图表。
+    myChart.setOption(option);
+</script>
+
+<h2>M0</h2>
+<!-- 为ECharts准备一个具备大小（宽高）的Dom -->
+<div id="main0" style="width: 1800px;height:400px;"></div>
+<script type="text/javascript">
+    // 基于准备好的dom，初始化echarts实例
+    var myChart = echarts.init(document.getElementById('main0'));
+
+    option = {
+        tooltip: {
+            trigger: 'axis',
+            axisPointer: {
+                type: 'cross',
+                crossStyle: {
+                    color: '#999'
+                }
+            }
+        },
+        toolbox: {
+            feature: {
+                dataView: {show: true, readOnly: false},
+                magicType: {show: true, type: ['line', 'bar']},
+                restore: {show: true},
+                saveAsImage: {show: true}
+            }
+        },
+        legend: {
+            data:['M0','M0同比增长','M0环比增长']
+        },
+        xAxis: [
+            {
+                type: 'category',
+                data: [
+                  <% @reverse_gdps.each do |gdp| %>
+                    '<%= gdp.month %>',
+                  <% end %>
+                ],
+                //data: ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'],
+                axisPointer: {
+                    type: 'shadow'
+                }
+            }
+        ],
+        yAxis: [
+            {
+                type: 'value',
+                name: '数量',
+                min: 0,
+                max: 2000000,
+                interval: 200000,
+                axisLabel: {
+                    formatter: '{value} 亿元'
+                }
+            },
+            {
+                type: 'value',
+                name: '增长率',
+                min: -20,
+                max: 30,
+                interval: 5,
+                axisLabel: {
+                    formatter: '{value} %'
+                }
+            }
+        ],
+        series: [
+            {
+                name:'M0',
+                type:'bar',
+                data:[
+                  <% @reverse_gdps.each do |gdp| %>
+                    '<%= gdp.m0.to_f %>',
+                  <% end %>
+                ]
+            },
+            {
+                name:'M0同比增长',
+                type:'line',
+                yAxisIndex: 1,
+                data:[
+                  <% @reverse_gdps.each do |gdp| %>
+                    '<%= gdp.m0_yoy_growth.sub('%','').to_f %>',
+                  <% end %>
+                ]
+            },
+            {
+                name:'M0环比增长',
+                type:'line',
+                yAxisIndex: 1,
+                data:[
+                  <% @reverse_gdps.each do |gdp| %>
+                    '<%= gdp.m0_chain_growth.sub('%','').to_f %>',
+                  <% end %>
+                ]
+            }
+        ]
+    };
+
+    // 使用刚指定的配置项和数据显示图表。
+    myChart.setOption(option);
+</script>
+
+<table>
+  <thead>
+    <tr>
+      <th>Month</th>
+      <th>M2</th>
+      <th>M2 yoy growth</th>
+      <th>M2 chain growth</th>
+      <th>M1</th>
+      <th>M1 yoy growth</th>
+      <th>M0</th>
+      <th>M0 yoy growth</th>
+      <th>M0 chain growth</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @gdps.each do |gdp| %>
+      <tr>
+        <td><%= gdp.month %></td>
+        <td><%= gdp.m2 %></td>
+        <td><%= gdp.m2_yoy_growth %></td>
+        <td><%= gdp.m2_chain_growth %></td>
+        <td><%= gdp.m1 %></td>
+        <td><%= gdp.m1_yoy_growth %></td>
+        <td><%= gdp.m0 %></td>
+        <td><%= gdp.m0_yoy_growth %></td>
+        <td><%= gdp.m0_chain_growth %></td>
+        <td><%= link_to 'Show', gdp %></td>
+        <td><%= link_to 'Edit', edit_gdp_path(gdp) %></td>
+        <td><%= link_to 'Destroy', gdp, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Gdp', new_gdp_path %>

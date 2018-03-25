@@ -1,0 +1,49 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Month:</strong>
+  <%= @gdp.month %>
+</p>
+
+<p>
+  <strong>M2:</strong>
+  <%= @gdp.m2 %>
+</p>
+
+<p>
+  <strong>M2 yoy growth:</strong>
+  <%= @gdp.m2_yoy_growth %>
+</p>
+
+<p>
+  <strong>M2 chain growth:</strong>
+  <%= @gdp.m2_chain_growth %>
+</p>
+
+<p>
+  <strong>M1:</strong>
+  <%= @gdp.m1 %>
+</p>
+
+<p>
+  <strong>M1 yoy growth:</strong>
+  <%= @gdp.m1_yoy_growth %>
+</p>
+
+<p>
+  <strong>M0:</strong>
+  <%= @gdp.m0 %>
+</p>
+
+<p>
+  <strong>M0 yoy growth:</strong>
+  <%= @gdp.m0_yoy_growth %>
+</p>
+
+<p>
+  <strong>M0 chain growth:</strong>
+  <%= @gdp.m0_chain_growth %>
+</p>
+
+<%= link_to 'Edit', edit_gdp_path(@gdp) %> |
+<%= link_to 'Back', gdps_path %>

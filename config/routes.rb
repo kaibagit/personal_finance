@@ -1,5 +1,7 @@
 Rails.application.routes.draw do
 
+  resources :gdps
+
   resources :orientations
 
   resources :financing_items

@@ -1,0 +1,53 @@
+<%= form_for(@gdp) do |f| %>
+  <% if @gdp.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@gdp.errors.count, "error") %> prohibited this gdp from being saved:</h2>
+
+      <ul>
+      <% @gdp.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :month %><br>
+    <%= f.text_field :month %>
+  </div>
+  <div class="field">
+    <%= f.label :m2 %><br>
+    <%= f.text_field :m2 %>
+  </div>
+  <div class="field">
+    <%= f.label :m2_yoy_growth %><br>
+    <%= f.text_field :m2_yoy_growth %>
+  </div>
+  <div class="field">
+    <%= f.label :m2_chain_growth %><br>
+    <%= f.text_field :m2_chain_growth %>
+  </div>
+  <div class="field">
+    <%= f.label :m1 %><br>
+    <%= f.text_field :m1 %>
+  </div>
+  <div class="field">
+    <%= f.label :m1_yoy_growth %><br>
+    <%= f.text_field :m1_yoy_growth %>
+  </div>
+  <div class="field">
+    <%= f.label :m0 %><br>
+    <%= f.text_field :m0 %>
+  </div>
+  <div class="field">
+    <%= f.label :m0_yoy_growth %><br>
+    <%= f.text_field :m0_yoy_growth %>
+  </div>
+  <div class="field">
+    <%= f.label :m0_chain_growth %><br>
+    <%= f.text_field :m0_chain_growth %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

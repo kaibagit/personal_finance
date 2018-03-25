@@ -1,0 +1,23 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  month: MyString
+  m2: MyString
+  m2_yoy_growth: MyString
+  m2_chain_growth: MyString
+  m1: MyString
+  m1_yoy_growth: MyString
+  m0: MyString
+  m0_yoy_growth: MyString
+  m0_chain_growth: MyString
+
+two:
+  month: MyString
+  m2: MyString
+  m2_yoy_growth: MyString
+  m2_chain_growth: MyString
+  m1: MyString
+  m1_yoy_growth: MyString
+  m0: MyString
+  m0_yoy_growth: MyString
+  m0_chain_growth: MyString
