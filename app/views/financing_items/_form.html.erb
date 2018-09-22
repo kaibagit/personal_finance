@@ -16,6 +16,13 @@
     <%= f.text_field :money_yuan %> 元
   </div>
   <div class="field">
+    <label>资金往来</label><br>
+    <select id="money_flow" name="money_flow">
+      <option value="balance">余额</option>
+      <option value="outside">外部</option>
+    </select>
+  </div>
+  <div class="field">
     <%= f.label :支付时间 %><br>
     <%= f.datetime_select :paid_at %>
   </div>

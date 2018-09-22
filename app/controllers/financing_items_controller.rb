@@ -33,7 +33,7 @@ class FinancingItemsController < ApplicationController
     @financing_item = FinancingItem.new(financing_item_params)
 
     respond_to do |format|
-      if @financing_item.add
+      if @financing_item.add(params[:money_flow])
         format.html { redirect_to action: "index",financing_id: @financing_item.financing.id }
         format.json { render :show, status: :created, location: @financing_item }
       else
@@ -75,6 +75,6 @@ class FinancingItemsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def financing_item_params
-      params.require(:financing_item).permit(:financing_id, :money_cent, :paid_at, :interested_at, :money_yuan)
+      params.require(:financing_item).permit(:financing_id, :money_cent, :paid_at, :interested_at, :money_yuan, :money_flow)
     end
 end
