@@ -57,6 +57,7 @@
       <th>预期收益（元）</th>
       <th>到期时间</th>
       <th>距离天数</th>
+      <th>操作</th>
     </tr>
   </thead>
 
@@ -70,6 +71,9 @@
         <td><%= financing.exp_earning_yuan %></td>
         <td><%= financing.exp_antedated.strftime('%Y-%m-%d') %></td>
         <td><font color='red'><%= financing.exp_antedated-Time.now.to_date %></font></td>
+        <td>
+            <%= link_to('完成', {:controller => 'financings', :action => 'finish_view', :id => financing.id}) %>
+        </td>
       </tr>
     <% end %>
   </tbody>

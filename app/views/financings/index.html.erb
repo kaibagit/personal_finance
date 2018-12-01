@@ -63,7 +63,14 @@
         </td>
         <td><%= financing.money_yuan %></td>
         <td><%= financing.paid_at.strftime('%Y-%m-%d %H:%M:%S') %></td>
-        <td><%= financing.exp_antedated %> / <%= financing.act_antedated %></td>
+        <td>
+          <% if financing.exp_antedated and financing.exp_antedated<=Time.now %>
+            <font color='red'><%= financing.exp_antedated %></font>
+          <% else %>
+            <%= financing.exp_antedated %>
+          <% end %>
+          / <%= financing.act_antedated %>
+        </td>
         <td><%= financing.exp_earning_yuan %> / <%= financing.act_earning_yuan %></td>
         <td><%= financing.exp_rate_percent %>% / <%= financing.act_rate_percent %>%</td>
         <td>
