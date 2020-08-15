@@ -4,7 +4,7 @@ class ChannelsController < ApplicationController
   # GET /channels
   # GET /channels.json
   def index
-    @channels = Channel.all
+    @channels = Channel.where('effective is null or effective =true')
     @total_cent = @total_lower_risk = @total_medium_risk = @total_high_risk = 0
     @channels.each do |c|
       @total_cent+=c.total_cent
@@ -192,7 +192,8 @@ class ChannelsController < ApplicationController
   # DELETE /channels/1
   # DELETE /channels/1.json
   def destroy
-    @channel.destroy
+    @channel.effective = false
+    @channel.save
     respond_to do |format|
       format.html { redirect_to channels_url, notice: 'Channel was successfully destroyed.' }
       format.json { head :no_content }
