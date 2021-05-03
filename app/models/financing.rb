@@ -306,16 +306,27 @@ class Financing < ActiveRecord::Base
 		end
 	end
 
+
+	# 实际收益（元）
 	def act_earning_yuan
 		if act_earning.blank?
 			return nil
 		end
 		BigDecimal.new(act_earning)/100
 	end
-
 	def act_earning_yuan=(value)
 		unless value.blank?
 			self.act_earning=Float(value)*100
+		end
+	end
+
+	# 结算金额（元）
+	def settle_money_yuan
+		return nil
+	end
+	def settle_money_yuan=(value)
+		unless value.blank?
+			self.act_earning_yuan=Float(value)-self.money_yuan
 		end
 	end
 

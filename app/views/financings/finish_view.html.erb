@@ -27,10 +27,10 @@
     <%= f.date_select :act_antedated %>
   </p>
   <p>
-    <strong>收益:</strong>
-    <%= @financing.exp_earning_yuan %> 元
-    <strong>最终收益:</strong>
-    <%= f.text_field :act_earning_yuan %> 元
+    <strong>期望金额:</strong>
+    <%= @financing.money_yuan+@financing.exp_earning_yuan %> （收益：<%= @financing.exp_earning_yuan %>）元
+    <strong>最终金额:</strong>
+    <%= f.text_field :settle_money_yuan %> 元
   </p>
   <p>
     <strong>利率:</strong>
