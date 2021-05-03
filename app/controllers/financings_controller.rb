@@ -1,5 +1,5 @@
 class FinancingsController < ApplicationController
-  before_action :set_financing, only: [:show, :edit, :update, :destroy, :finish_view, :finish]
+  before_action :set_financing, only: [:show, :edit, :update, :destroy, :finish_view, :finish, :estimate_apr]
 
   # GET /financings
   # GET /financings.json
@@ -116,6 +116,19 @@ class FinancingsController < ApplicationController
 		respond_to do |format|
       if @financing.to_finish(financing_params)
 				format.html { redirect_to action: "index",channel_id: @financing.channel_id }
+        format.json { render :show, status: :ok, location: @financing }
+      else
+        format.html { render :edit }
+        format.json { render json: @financing.errors, status: :unprocessable_entity }
+      end
+    end
+  end
+
+  # 估算年化
+  def estimate_apr
+    respond_to do |format|
+      if @financing.estimate_apr(financing_params)
+				format.html { render :estimate_apr_view, status: :ok, location: @financing }
         format.json { render :show, status: :ok, location: @financing }
       else
         format.html { render :edit }

@@ -1,6 +1,6 @@
 <h1>投资完成</h1>
 
-<%= form_for(@financing,{:url=>'finish'}) do |f| %>
+<%= form_for(@financing,{:url=>''}) do |f| %>
 
   <input type="hidden" name="id" value="<%= @financing.id %>">
   <input type="hidden" name="financing[channel_id]" value="<%= @financing.channel.id %>">
@@ -37,12 +37,13 @@
     <%= f.text_field :settle_money_yuan %> 元
   </p>
   <p>
-    <strong>利率:</strong>
+    <strong>期望利率:</strong>
     <%= @financing.exp_rate_percent %> %
   </p>
 
   <div class="actions">
-    <%= f.submit %>
+    <%= submit_tag('估算年化', formaction: 'estimate_apr', formmethod: 'POST') %>
+    <%= submit_tag('完成投资', formaction: 'finish', formmethod: 'POST') %>
   </div>
   <%= link_to('返回',{:controller => 'financings', :action => 'index', :channel_id => @financing.channel.id }) %>
 

@@ -1,0 +1,36 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>名称:</strong>
+  <%= @financing.name %>
+</p>
+
+<p>
+  <strong>金额:</strong>
+  <%= @financing.money_yuan %> 元
+</p>
+
+<p>
+  <strong>投资时间:</strong>
+  <%= @financing.paid_at.strftime('%Y-%m-%d') %>
+</p>
+
+<p>
+  <strong>期望利率:</strong>
+  <%= @financing.exp_rate_percent %> %
+</p>
+
+<p>
+  <strong>总收益:</strong>
+  <%= @financing.act_earning_yuan %> 元
+</p>
+
+<p>
+  <strong>实际利率:</strong>
+  <%= @financing.act_rate_percent %> %
+</p>
+
+
+
+
+<%= link_to('返回',{:controller => 'financings', :action => 'finish_view', :id => @financing.id }) %>

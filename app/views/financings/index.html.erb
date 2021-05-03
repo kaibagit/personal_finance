@@ -94,7 +94,7 @@
         </td>
         <td>
           <% if financing.started? %>
-            <%= link_to('完成', {:controller => 'financings', :action => 'finish_view', :id => financing.id}) %>
+            <%= link_to('估算&完成', {:controller => 'financings', :action => 'finish_view', :id => financing.id}) %>
             <%= link_to('追加', {:controller => 'financing_items', :action => 'index', :financing_id => financing.id}) %>
           <% end %>
           <% if financing.finished? %>

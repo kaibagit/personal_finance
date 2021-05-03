@@ -238,6 +238,12 @@ class Financing < ActiveRecord::Base
 
 	#完成投资
 	def to_finish(attributes)
+		self.estimate_apr(attributes)
+		save
+	end
+
+	# 估算年化
+	def estimate_apr(attributes)
 		update_attributes(attributes)
 		self.status='finished'
 
@@ -279,7 +285,6 @@ class Financing < ActiveRecord::Base
 			end
 		end
 		channel.earning self.act_earning
-		save
 	end
 
 	def money_yuan
