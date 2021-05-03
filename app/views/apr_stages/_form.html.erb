@@ -1,0 +1,36 @@
+<%= form_for(@apr_stage) do |f| %>
+  <% if @apr_stage.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@apr_stage.errors.count, "error") %> prohibited this apr_stage from being saved:</h2>
+
+      <ul>
+      <% @apr_stage.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <input type="hidden" name="apr_stage[financing_id]" value="<%= @apr_stage.financing.id %>">
+  <div class="field">
+    <%= f.label :开始时间 %><br>
+    <%= @apr_stage.begin_date %>
+    <input type="hidden" name="apr_stage[begin_date]" value="<%= @apr_stage.begin_date %>">
+  </div>
+  <div class="field">
+    <%= f.label :结束时间 %><br>
+    <%= f.date_select :end_date %>
+  </div>
+  <div class="field">
+    <%= f.label :起始金额 %><br>
+    <%= @apr_stage.begin_money_yuan %> 元
+    <input type="hidden" name="apr_stage[begin_money]" value="<%= @apr_stage.begin_money %>">
+  </div>
+  <div class="field">
+    <%= f.label :结束金额 %><br>
+    <%= f.number_field :end_money_yuan %> 元
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

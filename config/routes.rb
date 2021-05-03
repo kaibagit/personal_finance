@@ -1,5 +1,7 @@
 Rails.application.routes.draw do
 
+  resources :apr_stages
+
   resources :gdps
 
   resources :orientations

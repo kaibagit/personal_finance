@@ -1,0 +1,34 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Begin date:</strong>
+  <%= @apr_stage.begin_date %>
+</p>
+
+<p>
+  <strong>End date:</strong>
+  <%= @apr_stage.end_date %>
+</p>
+
+<p>
+  <strong>Begin money:</strong>
+  <%= @apr_stage.begin_money %>
+</p>
+
+<p>
+  <strong>End money:</strong>
+  <%= @apr_stage.end_money %>
+</p>
+
+<p>
+  <strong>Apr:</strong>
+  <%= @apr_stage.apr %>
+</p>
+
+<p>
+  <strong>Financing:</strong>
+  <%= @apr_stage.financing_id %>
+</p>
+
+<%= link_to 'Edit', edit_apr_stage_path(@apr_stage) %> |
+<%= link_to 'Back', apr_stages_path %>

@@ -100,6 +100,7 @@
           <% if financing.finished? %>
             <%= link_to('流水', {:controller => 'financing_items', :action => 'index', :financing_id => financing.id}) %>
           <% end %>
+          <%= link_to('阶段年化', {:controller => 'apr_stages', :action => 'index', :financing_id => financing.id}) %>
           <%= link_to 'Show', financing %>
           <%= link_to 'Edit', edit_financing_path(financing) %>
           <%= link_to 'Destroy', financing, method: :delete, data: { confirm: 'Are you sure?' } %>

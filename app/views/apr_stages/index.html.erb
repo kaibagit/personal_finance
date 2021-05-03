@@ -1,0 +1,31 @@
+<h1>阶段性年化利率</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>开始时间</th>
+      <th>结束时间</th>
+      <th>起始金额（元）</th>
+      <th>结束金额（元）</th>
+      <th>年化</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @apr_stages.each do |apr_stage| %>
+      <tr>
+        <td><%= apr_stage.begin_date %></td>
+        <td><%= apr_stage.end_date %></td>
+        <td><%= apr_stage.begin_money_yuan %></td>
+        <td><%= apr_stage.end_money_yuan %></td>
+        <td><%= apr_stage.apr_percent %> %</td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+<% if @financing.started? %>
+  <%= link_to('归纳',{:controller=> 'apr_stages', :action => 'new', :financing_id => @financing.id}) %>
+<% end %>
+<%= link_to('返回',{:controller => 'financings', :action => 'index', :channel_id => @financing.channel.id }) %>

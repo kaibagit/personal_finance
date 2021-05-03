@@ -2,6 +2,7 @@ class Financing < ActiveRecord::Base
 	belongs_to :channel
 	belongs_to :orientation
 	has_many :items,:class_name=> 'FinancingItem'
+	has_many :apr_stages,:class_name=> 'AprStage'
 	enum status: {started:'started',finished:'finished'}
 	enum horizon_unit: {day:'day',month:'month',year:'year'}
 	enum risk: {lower_risk:'lower_risk',medium_risk:'medium_risk',high_risk:'high_risk'}
@@ -196,7 +197,7 @@ class Financing < ActiveRecord::Base
 					# 收益 = 本金*(计息天数/365)*利率
 					self.act_earning = money_cent*total_days/365*exp_rate
 				else
-					# 利率 = (利息/本金)/(计息天数/365) = 利息*365/本金*计息天数
+					# 利率 = (利息/本金)/(计息天数/365) = 利息*365/（本金*计息天数）
 					self.act_rate=Float(act_earning*365)/(money_cent*total_days)
 				end
 				channel.earning self.act_earning
@@ -238,8 +239,12 @@ class Financing < ActiveRecord::Base
 
 	#完成投资
 	def to_finish(attributes)
-		self.estimate_apr(attributes)
-		save
+		Financing.transaction do
+			self.estimate_apr(attributes)
+			save!
+			#生成阶段年化记录
+			AprStage.save_last_stage_when_financing_finish(self)
+		end
 	end
 
 	# 估算年化
@@ -280,7 +285,7 @@ class Financing < ActiveRecord::Base
 				# 收益 = 本金*(计息天数/365)*利率
 				self.act_earning = money_cent*weighting_days/365*exp_rate
 			else
-				# 利率 = (利息/本金)/(计息天数/365) = 利息*365/本金*加权天数
+				# 利率 = (利息/本金)/(计息天数/365) = 利息*365/(本金*加权天数)
 				self.act_rate=Float(act_earning*365)/(money_cent*weighting_days)
 			end
 		end
