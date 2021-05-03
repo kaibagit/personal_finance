@@ -28,7 +28,11 @@
   </p>
   <p>
     <strong>期望金额:</strong>
-    <%= @financing.money_yuan+@financing.exp_earning_yuan %> （收益：<%= @financing.exp_earning_yuan %>）元
+    <% if @financing.current? %>
+      <%= @financing.money_yuan %> 元
+    <% else %>
+      <%= @financing.money_yuan+@financing.exp_earning_yuan %> （收益：<%= @financing.exp_earning_yuan %>）元
+    <% end %>
     <strong>最终金额:</strong>
     <%= f.text_field :settle_money_yuan %> 元
   </p>
