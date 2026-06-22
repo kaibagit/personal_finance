@@ -35,7 +35,7 @@ class FinancingItem < ActiveRecord::Base
 		if money_cent.blank?
 			return nil
 		end
-		BigDecimal.new(money_cent)/100
+		BigDecimal(money_cent)/100
 	end
 
 	def money_yuan=(value)

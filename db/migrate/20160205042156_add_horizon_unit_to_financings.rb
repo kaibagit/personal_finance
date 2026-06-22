@@ -1,4 +1,4 @@
-class AddHorizonUnitToFinancings < ActiveRecord::Migration
+class AddHorizonUnitToFinancings < ActiveRecord::Migration[4.2]
   def change
     add_column :financings, :horizon_unit, :string
   end

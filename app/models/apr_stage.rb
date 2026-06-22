@@ -30,7 +30,7 @@ class AprStage < ActiveRecord::Base
 		if begin_money.blank?
 			return nil
 		end
-		BigDecimal.new(begin_money)/100
+		BigDecimal(begin_money)/100
 	end
 	def begin_money_yuan=(value)
 		self.begin_money=Float(value)*100
@@ -40,7 +40,7 @@ class AprStage < ActiveRecord::Base
 		if end_money.blank?
 			return nil
 		end
-		BigDecimal.new(end_money)/100
+		BigDecimal(end_money)/100
 	end
 	def end_money_yuan=(value)
 		self.end_money=Float(value)*100

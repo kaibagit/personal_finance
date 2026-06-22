@@ -6,7 +6,7 @@ class Expense < ActiveRecord::Base
 
 	def yuan
     if cent.blank?; return nil; end
-		BigDecimal.new(cent)/100
+		BigDecimal(cent)/100
 	end
 
   def yuan=(value)

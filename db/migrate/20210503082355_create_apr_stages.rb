@@ -1,4 +1,4 @@
-class CreateAprStages < ActiveRecord::Migration
+class CreateAprStages < ActiveRecord::Migration[4.2]
   def change
     create_table :apr_stages do |t|
       t.date :begin_date

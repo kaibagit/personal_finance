@@ -1,4 +1,4 @@
-class CreateFinancingItems < ActiveRecord::Migration
+class CreateFinancingItems < ActiveRecord::Migration[4.2]
   def change
     create_table :financing_items do |t|
       t.integer :financing_id

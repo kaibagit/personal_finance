@@ -4,7 +4,7 @@ class Channel < ActiveRecord::Base
 	default_scope{order('id')}
 
 	def total_yuan
-		BigDecimal.new(total_cent)/100
+		BigDecimal(total_cent)/100
 	end
 
 	def change_cent(cent)
@@ -22,7 +22,7 @@ class Channel < ActiveRecord::Base
     if earnings.blank?
       return nil
     end
-    BigDecimal.new(earnings)/100
+    BigDecimal(earnings)/100
   end
 
   # 低风险金额

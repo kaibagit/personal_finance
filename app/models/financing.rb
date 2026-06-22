@@ -249,7 +249,7 @@ class Financing < ActiveRecord::Base
 
 	# 估算年化
 	def estimate_apr(attributes)
-		update_attributes(attributes)
+		assign_attributes(attributes)
 		self.status='finished'
 
 		#加权天数
@@ -296,7 +296,7 @@ class Financing < ActiveRecord::Base
 		if money_cent.blank?
 			return nil
 		end
-		BigDecimal.new(money_cent)/100
+		BigDecimal(money_cent)/100
 	end
 
 	def money_yuan=(value)
@@ -307,7 +307,7 @@ class Financing < ActiveRecord::Base
 		if exp_earning.blank?
 			return nil
 		end
-		BigDecimal.new(exp_earning)/100
+		BigDecimal(exp_earning)/100
 	end
 
 	def exp_earning_yuan=(value)
@@ -322,7 +322,7 @@ class Financing < ActiveRecord::Base
 		if act_earning.blank?
 			return nil
 		end
-		BigDecimal.new(act_earning)/100
+		BigDecimal(act_earning)/100
 	end
 	def act_earning_yuan=(value)
 		unless value.blank?
