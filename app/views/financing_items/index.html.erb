@@ -25,4 +25,4 @@
 <% if @financing.started? %>
   <%= link_to('追加投资',{:controller=> 'financing_items', :action => 'new', :financing_id => @financing.id}) %>
 <% end %>
-<%= link_to('返回',{:controller => 'financings', :action => 'index', :channel_id => @financing.channel.id }) %>
+<%= link_to('返回',{:controller => 'financings', :action => 'index', :channel_id => @financing.channel.id, :status => 'started'}) %>
