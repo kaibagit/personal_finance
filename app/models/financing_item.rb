@@ -2,6 +2,9 @@ class FinancingItem < ActiveRecord::Base
   belongs_to :financing
   default_scope{order('paid_at DESC')}
 
+  attr_accessor :money_flow
+  validates :money_flow, presence: { message: '资金往来不能为空' }
+
   def add(money_flow)
     Financing.transaction do
       financing = Financing.find(financing_id)

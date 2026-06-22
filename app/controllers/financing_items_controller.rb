@@ -31,6 +31,7 @@ class FinancingItemsController < ApplicationController
   # POST /financing_items.json
   def create
     @financing_item = FinancingItem.new(financing_item_params)
+    @financing_item.money_flow = params[:money_flow]
 
     respond_to do |format|
       if @financing_item.add(params[:money_flow])
