@@ -1,4 +1,5 @@
 class FinancingsController < ApplicationController
+  protect_from_forgery except: [:finish, :estimate_apr]
   before_action :set_financing, only: [:show, :edit, :update, :destroy, :finish_view, :finish, :estimate_apr]
 
   # GET /financings

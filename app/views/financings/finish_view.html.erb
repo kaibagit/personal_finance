@@ -1,6 +1,6 @@
 <h1>投资完成</h1>
 
-<%= form_for(@financing,{:url=>''}) do |f| %>
+<%= form_for(@financing) do |f| %>
 
   <input type="hidden" name="id" value="<%= @financing.id %>">
   <input type="hidden" name="financing[channel_id]" value="<%= @financing.channel.id %>">
