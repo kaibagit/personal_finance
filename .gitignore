@@ -21,3 +21,5 @@ public/javascripts/all.js
 public/stylesheets/all.css
 *.orig
 .idea/*
+
+.DS_Store
