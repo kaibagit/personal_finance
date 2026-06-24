@@ -22,7 +22,7 @@ class AprStage < ActiveRecord::Base
     #加权天数
 		days = end_date-begin_date
     # 利率 = (利息/本金)/(天数/365) = 利息*365/（本金*天数）
-    self.apr=(end_money-begin_money)*365/(begin_money*days)
+    self.apr=(end_money-begin_money)*365.to_f/(begin_money*days)
     save
   end
 
