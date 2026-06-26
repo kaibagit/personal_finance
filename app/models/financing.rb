@@ -151,6 +151,7 @@ class Financing < ActiveRecord::Base
 		item.interested_at = interested_at
 		item.created_at = created_at
 		item.updated_at = updated_at
+		item.money_flow = 'balance'
 		return item
 	end
 
@@ -234,7 +235,15 @@ class Financing < ActiveRecord::Base
 				end
 			end
 		end
-		save
+
+		# 创建初始投资流水
+		Financing.transaction do
+			save!
+			if items.empty?
+				item = default_item
+				item.save!
+			end
+		end
 	end
 
 	#完成投资
@@ -252,44 +261,102 @@ class Financing < ActiveRecord::Base
 		assign_attributes(attributes)
 		self.status='finished'
 
-		#加权天数
-		weighting_days = 0
-		if self.items.empty?
-			weighting_days = (act_antedated-interested_at).to_i+1
+		if has_initial_item?
+			# 有初始流水记录：使用 XIRR 算法
+			settle_amount = money_cent + (act_earning || 0)
+			cash_flows = build_cash_flows(settle_amount)
+			self.act_rate = compute_xirr(cash_flows)
 		else
-			sum = 0;
-			self.items.each{|item|
-				if item.money_cent > 0	#投资
-					logger.debug("投资A=#{act_antedated}")
-					logger.debug("投资A=#{item.interested_at}")
-					invest_days = (act_antedated-item.interested_at).to_i+1
-					logger.debug("投资=#{invest_days}")
-					sum = sum + ( invest_days*item.money_cent )
-				else	#赎回
-					logger.info(item.paid_at.class.instance_methods)
-					compensate_days = (act_antedated-item.paid_at.to_date).to_i		#赎回金额多计算了，需要补偿
-					logger.debug("赎回=#{compensate_days}")
-					sum = sum + ( compensate_days*item.money_cent )
-				end
-			}
-			weighting_days = sum/self.money_cent
-		end
-		logger.debug("天数=#{weighting_days}")
-		# 计算利率
-		if fixed?
-			# 利率 = (利息/本金)/(计息天数/365) = 利息*365/本金*加权天数
-			self.act_rate=Float(act_earning*365)/(money_cent*weighting_days)
-		else #活期
-			if act_earning.blank?
-				self.act_rate = exp_rate
-				# 收益 = 本金*(计息天数/365)*利率
-				self.act_earning = money_cent*weighting_days/365*exp_rate
+			# 无初始流水记录（历史数据）：使用旧加权天数公式
+			# 加权天数
+			if items.empty?
+				weighting_days = (act_antedated - interested_at).to_i + 1
 			else
-				# 利率 = (利息/本金)/(计息天数/365) = 利息*365/(本金*加权天数)
-				self.act_rate=Float(act_earning*365)/(money_cent*weighting_days)
+				sum = 0
+				items.each do |item|
+					if item.money_cent > 0  # 投资
+						invest_days = (act_antedated - item.interested_at).to_i + 1
+						sum = sum + (invest_days * item.money_cent)
+					else  # 赎回
+						compensate_days = (act_antedated - item.paid_at.to_date).to_i
+						sum = sum + (compensate_days * item.money_cent)
+					end
+				end
+				weighting_days = sum / money_cent
+			end
+
+			if fixed?
+				self.act_rate = Float(act_earning * 365) / (money_cent * weighting_days)
+			else  # 活期
+				if act_earning.blank?
+					self.act_rate = exp_rate
+					self.act_earning = money_cent * weighting_days / 365 * exp_rate
+				else
+					self.act_rate = Float(act_earning * 365) / (money_cent * weighting_days)
+				end
 			end
 		end
+
 		channel.earning self.act_earning
+	end
+
+	# 判断是否有初始投资流水记录（paid_at 匹配 Financing 的 paid_at）
+	def has_initial_item?
+		items.any? { |i| i.paid_at.present? && i.paid_at.to_s == paid_at.to_s }
+	end
+
+	# 构建现金流列表（XIRR 用）
+	def build_cash_flows(settle_amount)
+		flows = []
+
+		# 初始投资
+		initial = items.find { |i| i.paid_at.present? && i.paid_at.to_s == paid_at.to_s }
+		flows << { amount: -(initial ? initial.money_cent : money_cent).to_f, date: interested_at.to_date }
+
+		# 后续追加/赎回
+		items.each do |item|
+			next if initial && item.id == initial.id
+			if item.money_cent > 0
+				flows << { amount: -item.money_cent.to_f, date: item.interested_at.to_date }
+			else
+				flows << { amount: -item.money_cent.to_f, date: item.paid_at.to_date }
+			end
+		end
+
+		# 最终回款
+		flows << { amount: settle_amount.to_f, date: act_antedated.to_date }
+
+		flows.sort_by { |f| f[:date] }
+	end
+
+	# XIRR 计算：牛顿迭代法求解内部收益率
+	def compute_xirr(cash_flows, guess: 0.1, max_iter: 100, tolerance: 1e-7)
+		return 0.0 if cash_flows.empty?
+
+		rate = guess
+		t0 = cash_flows.first[:date]
+
+		max_iter.times do
+			pv = 0.0
+			d_pv = 0.0
+
+			cash_flows.each do |cf|
+				t = (cf[:date] - t0).to_f / 365.0  # 以年为单位的时间差
+				discount = (1.0 + rate) ** t
+				pv += cf[:amount] / discount
+				# 导数：-t * amount / (1+rate)^(t+1)
+				d_pv += -t * cf[:amount] / (discount * (1.0 + rate))
+			end
+
+			break if pv.abs < tolerance
+
+			new_rate = rate - pv / d_pv
+			break if (new_rate - rate).abs < tolerance
+
+			rate = new_rate
+		end
+
+		rate
 	end
 
 	def money_yuan
