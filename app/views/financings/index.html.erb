@@ -72,7 +72,14 @@
           / <%= financing.act_antedated %>
         </td>
         <td><%= financing.exp_earning_yuan %> / <%= financing.act_earning_yuan %></td>
-        <td><%= financing.exp_rate_percent %>% / <%= financing.act_rate_percent %>%</td>
+        <td>
+          <%= financing.exp_rate_percent %>% /
+          <% if financing.act_rate.present? && financing.act_rate < 0 %>
+            <font color='red'><%= financing.act_rate_percent %>%</font>
+          <% else %>
+            <%= financing.act_rate_percent %>%
+          <% end %>
+        </td>
         <td>
           <% if financing.lower_risk? %>
             <font color='green'>低风险</font>
