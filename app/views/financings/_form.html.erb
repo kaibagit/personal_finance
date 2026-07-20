@@ -45,6 +45,10 @@
     <%= select("financing","risk",{"低风险" => "lower_risk", "中等风险" => "medium_risk","高风险" => "high_risk"}) %>
   </div>
   <div class="field">
+    <%= f.label '计价方式' %><br>
+    <%= select("financing","valuation_method",{"时间加权(TWR)" => "twr", "原方式" => "legacy"}) %>
+  </div>
+  <div class="field">
     <%= f.label '支付时间' %><br>
     <%= f.datetime_select :paid_at %>
   </div>

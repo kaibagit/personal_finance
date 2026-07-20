@@ -57,6 +57,7 @@ class FinancingsController < ApplicationController
 		@channel = Channel.find(params['channel_id'])
     @financing = Financing.new
 		@financing.channel = @channel
+		@financing.valuation_method = 'twr'
   end
 
   # GET /financings/1/edit
@@ -150,6 +151,6 @@ class FinancingsController < ApplicationController
         :channel_id, :name, :exp_rate, :money_cent, :paid_at, :status, :exp_antedated, :act_antedated, :act_rate,
          :exp_earning, :exp_earning_yuan, :act_earning, :money_yuan, :exp_rate_percent, :horizon, :horizon_unit, :interested_at ,:act_earning_yuan, :settle_money_yuan,
          :risk,
-         :liquidity_type, :orientation_id)
+         :liquidity_type, :orientation_id, :valuation_method)
     end
 end

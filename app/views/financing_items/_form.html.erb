@@ -24,6 +24,15 @@
     </select>
   </div>
   <div class="field">
+    <label>计价方式</label><br>
+    <span><%= @financing_item.financing.twr? ? '时间加权(TWR)' : '原方式' %></span>
+  </div>
+  <div class="field">
+    <%= f.label :资金进出前市值 %><br>
+    <%= f.text_field :market_value_yuan %> 元
+    <small>（资金进出前的账户总市值，TWR模式必填；进出后市值由系统根据金额自动计算）</small>
+  </div>
+  <div class="field">
     <%= f.label :支付时间 %><br>
     <%= f.datetime_select :paid_at %>
   </div>

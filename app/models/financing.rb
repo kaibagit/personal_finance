@@ -7,6 +7,7 @@ class Financing < ActiveRecord::Base
 	enum horizon_unit: {day:'day',month:'month',year:'year'}
 	enum risk: {lower_risk:'lower_risk',medium_risk:'medium_risk',high_risk:'high_risk'}
 	enum liquidity_type:{current:'current',fixed:'fixed'}
+	enum valuation_method: {legacy:'legacy',twr:'twr'}
 	default_scope{order('paid_at DESC')}
 	#before_save :compute
 
@@ -152,6 +153,7 @@ class Financing < ActiveRecord::Base
 		item.created_at = created_at
 		item.updated_at = updated_at
 		item.money_flow = 'balance'
+		item.market_value_cent = 0 if twr?
 		return item
 	end
 
@@ -261,7 +263,10 @@ class Financing < ActiveRecord::Base
 		assign_attributes(attributes)
 		self.status='finished'
 
-		if has_initial_item?
+		if twr?
+			# TWR 模式：基于市值事件计算时间加权收益率
+			self.act_rate = Financing.compute_twr_from_valuations(twr_events)
+		elsif has_initial_item?
 			# 有初始流水记录：使用 XIRR 算法
 			settle_amount = money_cent + (act_earning || 0)
 			cash_flows = build_cash_flows(settle_amount)
@@ -359,6 +364,64 @@ class Financing < ActiveRecord::Base
 		rate
 	end
 
+	# TWR（时间加权收益率）：基于市值事件计算年化收益率
+	# events: 按日期升序 [{date:, mv:, net_flow:}]
+	#   mv = 该笔资金进出后的账户总市值
+	#   net_flow = 该笔净流入（追加为正，赎回为负）
+	def self.compute_twr_from_valuations(events)
+		return 0.0 if events.size < 2
+
+		total_days = (events.last[:date] - events.first[:date]).to_i
+		return 0.0 if total_days <= 0
+
+		prod = 1.0
+		events.each_cons(2) do |a, b|
+			days = (b[:date] - a[:date]).to_i
+			next if days <= 0
+
+			# 子期间收益率 = (期末市值 - 期初市值 - 期间净流入) / 期初市值
+			r = (b[:mv] - a[:mv] - b[:net_flow]) / a[:mv]
+
+			# 某段亏光（本金归零），TWR 无意义
+			return -1.0 if (1 + r) <= 0
+
+			prod *= (1 + r)
+		end
+
+		(prod ** (365.0 / total_days)) - 1.0
+	end
+
+	# 构建 TWR 市值事件列表
+	def twr_events
+		events = []
+
+		# 期初：首笔资金进入后的市值（market_value_cent 是进出前值，需加上金额得到进出后值）
+		first_item = items.min_by(&:paid_at)
+		if first_item&.market_value_cent.present?
+			initial_mv = first_item.market_value_cent + (first_item.money_cent || 0)
+		else
+			initial_mv = money_cent || 0
+		end
+		events << { date: interested_at.to_date, mv: initial_mv.to_f, net_flow: 0.0 }
+
+		# 各笔资金进出
+		items.each do |it|
+			next unless it.market_value_cent.present?
+			d = it.money_cent > 0 ? it.interested_at.to_date : it.paid_at.to_date
+			events << {
+				date: d,
+				mv: (it.market_value_cent + it.money_cent).to_f,
+				net_flow: it.money_cent.to_f
+			}
+		end
+
+		# 期末：结算市值
+		final_mv = (money_cent || 0) + (act_earning || 0)
+		events << { date: act_antedated.to_date, mv: final_mv.to_f, net_flow: 0.0 }
+
+		events.sort_by { |e| e[:date] }
+	end
+
 	def money_yuan
 		if money_cent.blank?
 			return nil
@@ -411,7 +474,7 @@ class Financing < ActiveRecord::Base
 		if exp_rate.blank?
 			return nil
 		end
-		exp_rate*100
+		(exp_rate*100).round(2)
 	end
 
 	def exp_rate_percent=(value)
@@ -422,6 +485,6 @@ class Financing < ActiveRecord::Base
 		if act_rate.blank?
 			return nil
 		end
-		act_rate*100
+		(act_rate*100).round(2)
 	end
 end

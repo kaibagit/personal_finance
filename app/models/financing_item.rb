@@ -4,6 +4,8 @@ class FinancingItem < ActiveRecord::Base
 
   attr_accessor :money_flow
   validates :money_flow, presence: { message: '资金往来不能为空' }
+  validates :market_value_cent, presence: { message: 'TWR模式下资金进出需填写资金进出前的市值' },
+    if: :require_market_value_for_twr?
 
   def add(money_flow)
     Financing.transaction do
@@ -44,4 +46,18 @@ class FinancingItem < ActiveRecord::Base
 	def money_yuan=(value)
 		self.money_cent=Float(value)*100
 	end
+
+  def market_value_yuan
+    BigDecimal(market_value_cent)/100 if market_value_cent.present?
+  end
+
+  def market_value_yuan=(value)
+    self.market_value_cent = Float(value)*100 if value.present?
+  end
+
+  private
+
+  def require_market_value_for_twr?
+    Financing.find_by(id: financing_id)&.twr?
+  end
 end
