@@ -265,7 +265,7 @@ class Financing < ActiveRecord::Base
 			# 有初始流水记录：使用 XIRR 算法
 			settle_amount = money_cent + (act_earning || 0)
 			cash_flows = build_cash_flows(settle_amount)
-			self.act_rate = compute_xirr(cash_flows)
+			self.act_rate = Financing.compute_xirr(cash_flows)
 		else
 			# 无初始流水记录（历史数据）：使用旧加权天数公式
 			# 加权天数
@@ -330,7 +330,7 @@ class Financing < ActiveRecord::Base
 	end
 
 	# XIRR 计算：牛顿迭代法求解内部收益率
-	def compute_xirr(cash_flows, guess: 0.1, max_iter: 100, tolerance: 1e-7)
+	def self.compute_xirr(cash_flows, guess: 0.1, max_iter: 100, tolerance: 1e-7)
 		return 0.0 if cash_flows.empty?
 
 		rate = guess
