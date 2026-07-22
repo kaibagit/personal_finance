@@ -251,10 +251,10 @@ class Financing < ActiveRecord::Base
 	#完成投资
 	def to_finish(attributes)
 		Financing.transaction do
-			self.estimate_apr(attributes)
+			return false unless estimate_apr(attributes)	# 校验失败则事务自动回滚
 			save!
-			#生成阶段年化记录
-			AprStage.save_last_stage_when_financing_finish(self)
+			#全量刷新阶段年化记录（含最终结算段）
+			AprStage.refresh_apr_stages(self)
 		end
 	end
 
@@ -264,13 +264,25 @@ class Financing < ActiveRecord::Base
 		self.status='finished'
 
 		if twr?
-			# TWR 模式：基于市值事件计算时间加权收益率
-			self.act_rate = Financing.compute_twr_from_valuations(twr_events)
+			# Financing 级别统一用资金加权（XIRR）反映真实回报
+			unless act_earning.present?
+				errors.add(:act_earning, '请填写最终金额以计算收益')
+				return false
+			end
+			settle_amount = money_cent + act_earning
+			cash_flows = build_cash_flows(settle_amount)
+			xirr = Financing.compute_xirr(cash_flows)
+			self.act_rate = (xirr && xirr.finite?) ? xirr.real : nil
 		elsif has_initial_item?
 			# 有初始流水记录：使用 XIRR 算法
+			unless act_earning.present?
+				errors.add(:act_earning, '请填写最终金额以计算收益')
+				return false
+			end
 			settle_amount = money_cent + (act_earning || 0)
 			cash_flows = build_cash_flows(settle_amount)
-			self.act_rate = Financing.compute_xirr(cash_flows)
+			xirr = Financing.compute_xirr(cash_flows)
+			self.act_rate = (xirr && xirr.finite?) ? xirr.real : nil
 		else
 			# 无初始流水记录（历史数据）：使用旧加权天数公式
 			# 加权天数
@@ -338,10 +350,17 @@ class Financing < ActiveRecord::Base
 	def self.compute_xirr(cash_flows, guess: 0.1, max_iter: 100, tolerance: 1e-7)
 		return 0.0 if cash_flows.empty?
 
+		# 现金流必须同时有正有负，否则 IRR 无意义
+		amounts = cash_flows.map { |cf| cf[:amount] }
+		return nil if amounts.all? { |a| a >= 0 } || amounts.all? { |a| a <= 0 }
+
 		rate = guess
 		t0 = cash_flows.first[:date]
 
 		max_iter.times do
+			# 本金已全损（rate <= -1），货币时间价值无意义，直接停止
+			return nil if 1.0 + rate <= 0
+
 			pv = 0.0
 			d_pv = 0.0
 
@@ -353,15 +372,54 @@ class Financing < ActiveRecord::Base
 				d_pv += -t * cf[:amount] / (discount * (1.0 + rate))
 			end
 
-			break if pv.abs < tolerance
+			return rate if pv.abs < tolerance
+
+			# 导数过小，避免步长爆炸导致发散
+			return nil if d_pv.abs < 1e-12
 
 			new_rate = rate - pv / d_pv
-			break if (new_rate - rate).abs < tolerance
+			# 钳制在合理年化区间，防止发散到天文数字
+			new_rate = 1000.0  if new_rate > 1000.0    # 上限 100000%
+			new_rate = -0.9999 if new_rate < -0.9999   # 下限（全损边界）
+
+			# 步长已极小，近似收敛
+			if (new_rate - rate).abs < tolerance
+				rate = new_rate
+				break
+			end
 
 			rate = new_rate
 		end
 
-		rate
+		# 收敛失败/结果非有限，不返回非法值
+		return nil unless rate.finite?
+		rate.real
+	end
+
+	# 计算"资金进出前"的年化收益率（统一使用资金加权 XIRR）
+	# new_item 为即将新增的流水（未持久化），其 market_value_cent 即进出前市值
+	def pre_addition_apr(new_item)
+		pre_mv = new_item.market_value_cent
+		return nil unless pre_mv.present?
+
+		old_items = items.to_a
+		return nil if old_items.empty?
+
+		flows = []
+		initial = old_items.find { |i| i.paid_at.present? && i.paid_at.to_s == paid_at.to_s }
+		flows << { amount: -(initial ? initial.money_cent : money_cent).to_f, date: interested_at.to_date }
+		old_items.each do |it|
+			next if initial && it.id == initial.id
+			if it.money_cent > 0
+				flows << { amount: -it.money_cent.to_f, date: it.interested_at.to_date }
+			else
+				flows << { amount: -it.money_cent.to_f, date: it.paid_at.to_date }
+			end
+		end
+		d = new_item.money_cent > 0 ? new_item.interested_at.to_date : new_item.paid_at.to_date
+		flows << { amount: pre_mv.to_f, date: d }
+		flows.sort_by! { |f| f[:date] }
+		Financing.compute_xirr(flows)
 	end
 
 	# TWR（时间加权收益率）：基于市值事件计算年化收益率
@@ -415,9 +473,11 @@ class Financing < ActiveRecord::Base
 			}
 		end
 
-		# 期末：结算市值
-		final_mv = (money_cent || 0) + (act_earning || 0)
-		events << { date: act_antedated.to_date, mv: final_mv.to_f, net_flow: 0.0 }
+		# 期末：结算市值（仅完成投资时追加，进行中不生成最终结算事件）
+		if finished? && act_antedated.present?
+			final_mv = (money_cent || 0) + (act_earning || 0)
+			events << { date: act_antedated.to_date, mv: final_mv.to_f, net_flow: 0.0 }
+		end
 
 		events.sort_by { |e| e[:date] }
 	end

@@ -5,7 +5,7 @@ class AprStagesController < ApplicationController
   # GET /apr_stages.json
   def index
     @financing = Financing.find(params['financing_id'])
-    @apr_stages = @financing.apr_stages
+    @apr_stages = @financing.apr_stages.order(id: :desc)
   end
 
   # GET /apr_stages/1

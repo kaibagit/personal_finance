@@ -10,8 +10,12 @@ class FinancingItem < ActiveRecord::Base
   def add(money_flow)
     Financing.transaction do
       financing = Financing.find(financing_id)
+      self.pre_apr = financing.pre_addition_apr(self)
       financing.add_to(self.money_cent)
       result = save
+
+      # 每次资金变动后全量刷新阶段年化记录
+      AprStage.refresh_apr_stages(financing)
 
       if 'outside' == money_flow
         channel = financing.channel

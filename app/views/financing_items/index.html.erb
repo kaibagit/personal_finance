@@ -3,8 +3,9 @@
 <table>
   <thead>
     <tr>
-      <th>金额（元）</th>
       <th>资金进出前市值（元）</th>
+      <th>资金进出前年化</th>
+      <th>金额（元）</th>
       <th>付款时间</th>
       <th>计息时间</th>
     </tr>
@@ -13,8 +14,9 @@
   <tbody>
     <% @financing_items.each do |financing_item| %>
       <tr>
-        <td><%= financing_item.money_yuan %></td>
         <td><%= financing_item.market_value_yuan %></td>
+        <td><%= financing_item.pre_apr.present? ? (financing_item.pre_apr * 100).round(2) : '—' %> %</td>
+        <td><%= financing_item.money_yuan %></td>
         <td><%= financing_item.paid_at.strftime('%Y-%m-%d %H:%M:%S') %></td>
         <td><%= financing_item.interested_at.strftime('%Y-%m-%d') %></td>
       </tr>
