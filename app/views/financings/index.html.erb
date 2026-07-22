@@ -45,6 +45,7 @@
       <th>利率(期望/实际)</th>
       <th>风险</th>
       <th>方向</th>
+      <th>说明</th>
       <th>状态</th>
       <th>操作</th>
     </tr>
@@ -92,6 +93,13 @@
           <% end %>
         </td>
         <td><%= financing.orientation&.name %></td>
+        <td>
+          <% if financing.remark.present? && financing.remark.length > 20 %>
+            <span title="<%= financing.remark %>"><%= truncate(financing.remark, length: 20) %></span>
+          <% else %>
+            <%= financing.remark %>
+          <% end %>
+        </td>
         <td name='td_status' data-status='<%=financing.status%>'>
           <% if financing.finished? %>
             <font color='green'>已完成</font>
