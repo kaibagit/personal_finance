@@ -2,36 +2,10 @@
 
 <p>
   进度：
-  <input type="radio" name="status" value="" />全部
-  <input type="radio" name="status" value="started"/>进行中
-  <input type="radio" name="status" value="finished" />已完成
+  <input type="radio" name="status" value="" <%= 'checked' if @status.blank? %> onclick="window.location.href='<%= financings_path(channel_id: @channel.id, status: '') %>'"/>全部
+  <input type="radio" name="status" value="started" <%= 'checked' if @status == 'started' %> onclick="window.location.href='<%= financings_path(channel_id: @channel.id, status: 'started') %>'"/>进行中
+  <input type="radio" name="status" value="finished" <%= 'checked' if @status == 'finished' %> onclick="window.location.href='<%= financings_path(channel_id: @channel.id, status: 'finished') %>'"/>已完成
 </p>
-<script type="text/javascript">
-  $(document).ready(
-  	function(){
-  		$("input:radio[value='<%=@status%>']").attr('checked','true');
-      $("input:radio[name='status']").each(function(){
-        $(this).bind('change',function(event){
-        	selectStatus();
-        });
-      })
-      selectStatus();
-  	}
-  );
-  function selectStatus() {
-    var current = $("input[name='status']:checked").val();
-    $("td[name='td_status']").each(function(){
-      var value = $(this).data('status');
-      if(current == ''){
-        $(this).parent().show();
-      }else if(value == current){
-        $(this).parent().show();
-      }else{
-        $(this).parent().hide();
-      }
-    });
-  }
-</script>
 
 <table>
   <thead>

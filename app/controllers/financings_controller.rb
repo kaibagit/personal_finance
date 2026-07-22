@@ -5,16 +5,17 @@ class FinancingsController < ApplicationController
   # GET /financings
   # GET /financings.json
   def index
-    @status = params['status']
-		@channel = Channel.find(params['channel_id'])
-    # sql = 'channel_id = ?'
-    # conditions = [sql,@channel.id]
-    # unless @status.blank?
-    #   sql << ' and status = ?'
-    #   conditions << @status
-    # end
-    # @financings = Financing.where(conditions)
+    @status = if params.key?('status')
+                params['status']
+              else
+                cookies[:financing_status].presence || 'started'
+              end
+    cookies[:financing_status] = { value: @status, expires: 1.year.from_now }
+    @channel = Channel.find(params['channel_id'])
     @financings = Financing.where(:channel => @channel)
+    unless @status.blank?
+      @financings = @financings.where(:status => @status)
+    end
     @lower_risk_money = @medium_risk_money = @high_risk_money = 0
     @financings.each do |f|
       if f.started?
