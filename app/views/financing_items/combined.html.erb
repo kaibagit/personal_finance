@@ -1,0 +1,58 @@
+<h1><%= @financing.name %></h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>资金进出前市值（元）</th>
+      <th>资金进出前年化</th>
+      <th>追加投资（元）</th>
+      <th>付款时间</th>
+      <th>计息时间</th>
+      <th>开始时间</th>
+      <th>结束时间</th>
+      <th>起始金额（元）</th>
+      <th>阶段金额（元）</th>
+      <th>年化(TWR)</th>
+      <th>投资追加（元）</th>
+      <th>最终金额（元）</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% max_rows = [@financing_items.size, @apr_stages.size].max %>
+    <% (0...max_rows).each do |i| %>
+      <tr>
+        <% item = @financing_items[i] %>
+        <% if item %>
+          <td><%= item.market_value_yuan %></td>
+          <td><%= item.pre_apr.present? ? (item.pre_apr * 100).round(2) : '—' %> %</td>
+          <td><%= item.money_yuan %></td>
+          <td><%= item.paid_at.strftime('%Y-%m-%d %H:%M:%S') %></td>
+          <td><%= item.interested_at.strftime('%Y-%m-%d') %></td>
+        <% else %>
+          <td></td><td></td><td></td><td></td><td></td>
+        <% end %>
+
+        <% stage = @apr_stages[i] %>
+        <% if stage %>
+          <td><%= stage.begin_date %></td>
+          <td><%= stage.end_date %></td>
+          <td><%= stage.begin_money_yuan %></td>
+          <td><%= stage.end_money_yuan - stage.net_flow_yuan %></td>
+          <td><%= stage.apr_percent.round(2) %> %</td>
+          <td><%= stage.net_flow_yuan %></td>
+          <td><%= stage.end_money_yuan %></td>
+        <% else %>
+          <td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+        <% end %>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<% if @financing.started? %>
+  <%= link_to('追加投资',{:controller=> 'financing_items', :action => 'new', :financing_id => @financing.id}) %>
+<% end %>
+<%= link_to('返回',{:controller => 'financings', :action => 'index', :channel_id => @financing.channel.id, :status => 'started'}) %>

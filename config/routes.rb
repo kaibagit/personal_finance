@@ -15,6 +15,7 @@ Rails.application.routes.draw do
   patch 'financings/finish' => 'financings#finish'
   patch 'financings/estimate_apr' => 'financings#estimate_apr'
   get 'financings/:financing_id/items' => 'financing_items#index'
+  get 'financings/:financing_id/items_apr' => 'financing_items#combined'
 
   resources :financings
   # resources :financings do

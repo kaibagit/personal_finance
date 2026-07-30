@@ -11,6 +11,15 @@ class FinancingItemsController < ApplicationController
     end
   end
 
+  def combined
+    @financing = Financing.find(params['financing_id'])
+    @financing_items = @financing.items
+    if @financing_items.empty?
+      @financing_items.push @financing.default_item
+    end
+    @apr_stages = @financing.apr_stages.order(id: :desc)
+  end
+
   # GET /financing_items/1
   # GET /financing_items/1.json
   def show
@@ -35,7 +44,7 @@ class FinancingItemsController < ApplicationController
 
     respond_to do |format|
       if @financing_item.add(params[:money_flow])
-        format.html { redirect_to action: "index",financing_id: @financing_item.financing.id }
+        format.html { redirect_to action: "combined",financing_id: @financing_item.financing.id }
         format.json { render :show, status: :created, location: @financing_item }
       else
         format.html { render :new }
