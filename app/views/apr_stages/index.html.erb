@@ -6,9 +6,10 @@
       <th>开始时间</th>
       <th>结束时间</th>
       <th>起始金额（元）</th>
-      <th>本段净流入（元）</th>
-      <th>结束金额（元）</th>
+      <th>阶段金额（元）</th>
       <th>年化(TWR)</th>
+      <th>投资追加（元）</th>
+      <th>最终金额（元）</th>
     </tr>
   </thead>
 
@@ -18,9 +19,10 @@
         <td><%= apr_stage.begin_date %></td>
         <td><%= apr_stage.end_date %></td>
         <td><%= apr_stage.begin_money_yuan %></td>
+        <td><%= apr_stage.end_money_yuan-apr_stage.begin_money_yuan %></td>
+        <td><%= apr_stage.apr_percent.round(2) %> %</td>
         <td><%= apr_stage.net_flow_yuan %></td>
         <td><%= apr_stage.end_money_yuan %></td>
-        <td><%= apr_stage.apr_percent %> %</td>
       </tr>
     <% end %>
   </tbody>
