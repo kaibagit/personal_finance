@@ -1,0 +1,6 @@
+cd /Users/luliru/RubymineProjects/personal_finance && bundle exec rails runner "
+f=Financing.find_by(id:69)
+puts 'status=%s valuation_method=%s twr?=%s finished?=%s' % [f.status, f.valuation_method, f.twr?, f.finished?]
+puts 'exp_antedated=%s exp_earning=%s exp_rate=%s' % [f.exp_antedated, f.exp_earning, f.exp_rate]
+puts 'items=%d apr_stages=%d' % [f.items.size, f.apr_stages.size]
+"

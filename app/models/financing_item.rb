@@ -2,6 +2,9 @@ class FinancingItem < ActiveRecord::Base
   belongs_to :financing
   default_scope{order('paid_at DESC')}
 
+  after_save :refresh_apr
+  after_destroy :refresh_apr
+
   attr_accessor :money_flow
   validates :money_flow, presence: { message: '资金往来不能为空' }
   validates :market_value_cent, presence: { message: 'TWR模式下资金进出需填写资金进出前的市值' },
@@ -13,9 +16,6 @@ class FinancingItem < ActiveRecord::Base
       self.pre_apr = financing.pre_addition_apr(self)
       financing.add_to(self.money_cent)
       result = save
-
-      # 每次资金变动后全量刷新阶段年化记录
-      AprStage.refresh_apr_stages(financing)
 
       if 'outside' == money_flow
         channel = financing.channel
@@ -60,6 +60,10 @@ class FinancingItem < ActiveRecord::Base
   end
 
   private
+
+  def refresh_apr
+    AprStage.refresh_apr_stages(financing) if financing.present?
+  end
 
   def require_market_value_for_twr?
     Financing.find_by(id: financing_id)&.twr?
