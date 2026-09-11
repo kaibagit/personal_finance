@@ -101,6 +101,8 @@
     <tr>
       <% if key == 'realtime' %>
         <td><%= link_to('实时', '/financings/realtime') %></td>
+      <% elsif key == 't_plus_1' %>
+        <td><%= link_to('T+1', '/financings/t_plus_1') %></td>
       <% else %>
         <td><%= Financing::TIME_TO_LIQUIDITY_TEXTS[key.to_sym] %></td>
       <% end %>

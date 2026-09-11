@@ -64,6 +64,11 @@ class Financing < ActiveRecord::Base
 		Financing.where("status=? and time_to_liquidity=?",'started','realtime').all
 	end
 
+	# T+1 变现速度投资
+	def self.t_plus_1_financings
+		Financing.where("status=? and time_to_liquidity=?",'started','t_plus_1').all
+	end
+
 	def self.one_month_fixed_financings
 		financings = Set.new
 		financings.merge(Financing.where("status=? and liquidity_type=? and horizon_unit=? and horizon=?",'started','fixed','month',1).reorder(nil).all)

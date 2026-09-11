@@ -12,6 +12,7 @@ Rails.application.routes.draw do
 
   get 'financings/current' => 'financings#current'
   get 'financings/realtime' => 'financings#realtime'
+  get 'financings/t_plus_1' => 'financings#t_plus_1'
   get 'financings/finish_view' => 'financings#finish_view'
   patch 'financings/finish' => 'financings#finish'
   patch 'financings/estimate_apr' => 'financings#estimate_apr'
