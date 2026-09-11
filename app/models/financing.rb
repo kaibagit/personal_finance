@@ -8,6 +8,7 @@ class Financing < ActiveRecord::Base
 	enum risk: {lower_risk:'lower_risk',medium_risk:'medium_risk',high_risk:'high_risk'}
 	enum liquidity_type:{current:'current',fixed:'fixed'}
 	enum valuation_method: {legacy:'legacy',twr:'twr'}
+	enum time_to_liquidity: {unknown:'unknown',realtime:'realtime',t_plus_1:'t_plus_1',within_week:'within_week'}
 	default_scope{order('paid_at DESC')}
 	#before_save :compute
 
@@ -546,5 +547,10 @@ class Financing < ActiveRecord::Base
 			return nil
 		end
 		(act_rate*100).round(2)
+	end
+
+	# 变现速度中文标签
+	def time_to_liquidity_text
+		{unknown: '未知', realtime: '实时', t_plus_1: 'T+1', within_week: '一周内'}[time_to_liquidity&.to_sym]
 	end
 end

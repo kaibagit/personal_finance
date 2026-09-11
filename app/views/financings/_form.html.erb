@@ -21,6 +21,10 @@
     <%= f.text_field :remark %>
   </div>
   <div>
+    <%= f.label '变现速度' %><br>
+    <%= select("financing","time_to_liquidity",{"未知"=>"unknown","实时"=>"realtime","T+1"=>"t_plus_1","一周内"=>"within_week"}) %>
+  </div>
+  <div>
     <%= f.label '流动性' %><br>
     <%= select("financing","liquidity_type",{"定期" => "fixed", "活期" => "current"}) %>
   </div>
