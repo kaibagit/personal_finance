@@ -119,6 +119,15 @@ class ChannelsController < ApplicationController
       :average_rate => more_than_one_year_fixed_financings_rate/more_than_one_year_fixed_financings_cent
     }
 
+    # 变现速度（未知放最后）
+    @time_to_liquidity_stat = {}
+    %w[realtime t_plus_1 within_week unknown].each do |key|
+      fs = Financing.where("status=? and time_to_liquidity=?", 'started', key)
+      cent = sum_cent(fs)
+      rate = fs.empty? ? 0.0 : sum_earnings(fs) / cent
+      @time_to_liquidity_stat[key] = { cent: cent, size: fs.size, average_rate: rate }
+    end
+
     @other_liquidity_cent = @total_cent-current_financings_cent-one_month_fixed_financings_cent-three_month_fixed_financings_cent-
       half_year_fixed_financings_cent-one_year_fixed_financings_cent-more_than_one_year_fixed_financings_cent
 

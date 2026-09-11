@@ -84,6 +84,37 @@
 </p>
 
 <p>
+  <b>变现速度：</b>
+<table>
+  <thead>
+  <tr>
+    <th>变现速度</th>
+    <th>金额</th>
+    <th>占比</th>
+    <th>投资数</th>
+    <th>平均利率</th>
+  </tr>
+  </thead>
+
+  <tbody>
+  <% %w[realtime t_plus_1 within_week unknown].each do |key| %>
+    <tr>
+      <% if key == 'realtime' %>
+        <td><%= link_to('实时', '/financings/realtime') %></td>
+      <% else %>
+        <td><%= Financing::TIME_TO_LIQUIDITY_TEXTS[key.to_sym] %></td>
+      <% end %>
+      <td><%= @time_to_liquidity_stat[key][:cent]/100.0 %></td>
+      <td><%= div_to_percent(@time_to_liquidity_stat[key][:cent].to_f,@total_cent) %></td>
+      <td><%= @time_to_liquidity_stat[key][:size] %></td>
+      <td><%= div_to_percent(@time_to_liquidity_stat[key][:average_rate],1.0) %></td>
+    </tr>
+  <% end %>
+  </tbody>
+</table>
+</p>
+
+<p>
   <b>流动性：</b>
   <table>
     <thead>

@@ -11,6 +11,7 @@ Rails.application.routes.draw do
   root :to => 'channels#index'
 
   get 'financings/current' => 'financings#current'
+  get 'financings/realtime' => 'financings#realtime'
   get 'financings/finish_view' => 'financings#finish_view'
   patch 'financings/finish' => 'financings#finish'
   patch 'financings/estimate_apr' => 'financings#estimate_apr'

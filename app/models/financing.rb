@@ -9,6 +9,7 @@ class Financing < ActiveRecord::Base
 	enum liquidity_type:{current:'current',fixed:'fixed'}
 	enum valuation_method: {legacy:'legacy',twr:'twr'}
 	enum time_to_liquidity: {unknown:'unknown',realtime:'realtime',t_plus_1:'t_plus_1',within_week:'within_week'}
+	TIME_TO_LIQUIDITY_TEXTS = {unknown: '未知', realtime: '实时', t_plus_1: 'T+1', within_week: '一周内'}.freeze
 	default_scope{order('paid_at DESC')}
 	#before_save :compute
 
@@ -56,6 +57,11 @@ class Financing < ActiveRecord::Base
 	# 活期投资
 	def self.current_financings
 		Financing.where("status=? and liquidity_type=?",'started','current').all
+	end
+
+	# 实时变现速度投资
+	def self.realtime_financings
+		Financing.where("status=? and time_to_liquidity=?",'started','realtime').all
 	end
 
 	def self.one_month_fixed_financings
@@ -551,6 +557,6 @@ class Financing < ActiveRecord::Base
 
 	# 变现速度中文标签
 	def time_to_liquidity_text
-		{unknown: '未知', realtime: '实时', t_plus_1: 'T+1', within_week: '一周内'}[time_to_liquidity&.to_sym]
+		TIME_TO_LIQUIDITY_TEXTS[time_to_liquidity&.to_sym]
 	end
 end
