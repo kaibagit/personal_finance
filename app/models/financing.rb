@@ -225,13 +225,14 @@ class Financing < ActiveRecord::Base
 	def to_start
 		self.status='started'
 		if fixed?
+			horizon_float = horizon.to_f
 			#计算期望到期时间
 			if day?
-				self.exp_antedated=(interested_at.advance(days:self.horizon))
+				self.exp_antedated=(interested_at.advance(days:horizon_float))
 			elsif month?
-				self.exp_antedated=(interested_at.advance(months:self.horizon))
+				self.exp_antedated=(interested_at.advance(months:horizon_float))
 			elsif year?
-				self.exp_antedated=(interested_at.advance(years:self.horizon))
+				self.exp_antedated=(interested_at.advance(years:horizon_float))
 			else
 				raise 'unknown horizon_unit'
 			end
@@ -239,11 +240,11 @@ class Financing < ActiveRecord::Base
 			#计算期望到期收益
 			if exp_earning.blank?
 				if day?
-					self.exp_earning=money_cent*exp_rate*horizon/365
+					self.exp_earning=money_cent.to_f*exp_rate.to_f*horizon_float/365
 				elsif month?
-					self.exp_earning=money_cent*exp_rate*horizon/12
+					self.exp_earning=money_cent.to_f*exp_rate.to_f*horizon_float/12
 				elsif year?
-					self.exp_earning=money_cent*exp_rate*horizon
+					self.exp_earning=money_cent.to_f*exp_rate.to_f*horizon_float
 				else
 					raise 'unknown horizon_unit'
 				end
