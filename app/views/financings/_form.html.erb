@@ -58,7 +58,15 @@
   </div>
   <div class="field">
     <%= f.label '计息时间' %><br>
-    <%= f.date_select :interested_at %>
+    <%= f.date_select :interested_at, start_year: 2017, end_year: 2050 %>
+  </div>
+  <div class="field">
+    <%= f.label '期望到期时间' %><br>
+    <%= f.date_select :exp_antedated, include_blank: true, start_year: 2017, end_year: 2050 %>
+  </div>
+  <div class="field">
+    <%= f.label '实际到期时间' %><br>
+    <%= f.date_select :act_antedated, include_blank: true, start_year: 2017, end_year: 2050 %>
   </div>
   <div class="field">
     <%= f.label '到期收益' %><br>
