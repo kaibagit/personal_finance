@@ -17,4 +17,10 @@ module ApplicationHelper
     ( (value*100).round(2)).to_s+' %'
   end
 
+  # 金额格式化：统一精确到小数点后2位
+  def format_yuan(value)
+    return '' if value.blank?
+    number_with_precision(value, precision: 2)
+  end
+
 end

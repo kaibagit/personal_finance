@@ -30,3 +30,7 @@ tr:nth-child(odd) {
 tr:hover {
   background-color: #d0ebff;
 }
+/* 金额列：右对齐 */
+th.money, td.money {
+  text-align: right;
+}

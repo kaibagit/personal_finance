@@ -1,7 +1,7 @@
 class Channel < ActiveRecord::Base
   has_many :expenses
 	has_many :financings
-	default_scope{order('id')}
+	default_scope{order(total_cent: :desc)}
 
 	def total_yuan
 		BigDecimal(total_cent)/100

@@ -11,12 +11,12 @@
   <thead>
     <tr>
       <th>名称</th>
-      <th>金额(元)</th>
+      <th class="money">金额(元)</th>
       <th>变现速度</th>
       <th>流动性</th>
       <th>付款时间</th>
       <th>到期时间(期望/实际)</th>
-      <th>收入(期望/实际)元</th>
+      <th class="money">收入(期望/实际)元</th>
       <th>利率(期望/实际·资金加权)</th>
       <th>风险</th>
       <th>方向</th>
@@ -30,7 +30,7 @@
     <% @financings.each do |financing| %>
       <tr>
         <td><%= financing.name %></td>
-        <td><%= financing.money_yuan %></td>
+        <td class="money"><%= format_yuan(financing.money_yuan) %></td>
         <td><%= financing.time_to_liquidity_text %></td>
         <td>
             <% if financing.current? %>
@@ -48,7 +48,7 @@
           <% end %>
           / <%= financing.act_antedated %>
         </td>
-        <td><%= financing.exp_earning_yuan %> / <%= financing.act_earning_yuan %></td>
+        <td class="money"><%= format_yuan(financing.exp_earning_yuan) %> / <%= format_yuan(financing.act_earning_yuan) %></td>
         <td>
           <%= financing.exp_rate_percent %>% /
           <% if financing.act_rate.present? && financing.act_rate < 0 %>
@@ -101,11 +101,11 @@
   </tbody>
 </table>
 <br>
-合计：<%= @channel.total_yuan %>元
-<font color='green'>低风险：</font><%= @lower_risk_money/100.0 %>元（<%= div_to_percent(@lower_risk_money,@channel.total_cent) %>）
-<font color='orange'>中等风险：</font><%= @medium_risk_money/100.0 %>元（<%= div_to_percent(@medium_risk_money,@channel.total_cent) %>）
-<font color='red'>高风险：</font><%= @high_risk_money/100.0 %>元（<%= div_to_percent(@high_risk_money,@channel.total_cent) %>）
-<font color='gray'>其他：</font><%= cent_to_yuan(@channel.other_money) %>元（<%= div_to_percent(@channel.other_money,@channel.total_cent) %>）
+合计：<%= format_yuan(@channel.total_yuan) %>元
+<font color='green'>低风险：</font><%= format_yuan(@lower_risk_money/100.0) %>元（<%= div_to_percent(@lower_risk_money,@channel.total_cent) %>）
+<font color='orange'>中等风险：</font><%= format_yuan(@medium_risk_money/100.0) %>元（<%= div_to_percent(@medium_risk_money,@channel.total_cent) %>）
+<font color='red'>高风险：</font><%= format_yuan(@high_risk_money/100.0) %>元（<%= div_to_percent(@high_risk_money,@channel.total_cent) %>）
+<font color='gray'>其他：</font><%= format_yuan(cent_to_yuan(@channel.other_money)) %>元（<%= div_to_percent(@channel.other_money,@channel.total_cent) %>）
 <br>
 
 <%= link_to('新增投资',{:controller=> 'financings', :action => 'new', :channel_id => @channel.id}) %>

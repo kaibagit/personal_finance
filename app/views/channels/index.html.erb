@@ -8,10 +8,10 @@
   <thead>
     <tr>
       <th>Name</th>
-      <th>金额（元）</th>
+      <th class="money">金额（元）</th>
       <th>占比</th>
       <th>风险（元）</th>
-      <th>总收益（元）</th>
+      <th class="money">总收益（元）</th>
       <th colspan="5"></th>
     </tr>
   </thead>
@@ -20,15 +20,15 @@
     <% @channels.each do |channel| %>
       <tr>
         <td><%= channel.name %></td>
-        <td><%= channel.total_yuan %></td>
+        <td class="money"><%= format_yuan(channel.total_yuan) %></td>
         <td><%= div_to_percent(channel.total_cent,@total_cent) %></td>
         <td>
-          <font color='green'>低风险：</font><%= cent_to_yuan(channel.lower_risk_money) %>元（<%= div_to_percent(channel.lower_risk_money,channel.total_cent) %>）
-          <font color='orange'>中等风险：</font><%= cent_to_yuan(channel.medium_risk_money) %>元（<%= div_to_percent(channel.medium_risk_money,channel.total_cent) %>）
-          <font color='red'>高风险：</font><%= cent_to_yuan(channel.high_risk_money) %>元（<%= div_to_percent(channel.high_risk_money,channel.total_cent) %>）
-          <font color='gray'>其他：</font><%= cent_to_yuan(channel.other_money) %>元（<%= div_to_percent(channel.other_money,channel.total_cent) %>）
+          <font color='green'>低风险：</font><%= format_yuan(cent_to_yuan(channel.lower_risk_money)) %>元（<%= div_to_percent(channel.lower_risk_money,channel.total_cent) %>）
+          <font color='orange'>中等风险：</font><%= format_yuan(cent_to_yuan(channel.medium_risk_money)) %>元（<%= div_to_percent(channel.medium_risk_money,channel.total_cent) %>）
+          <font color='red'>高风险：</font><%= format_yuan(cent_to_yuan(channel.high_risk_money)) %>元（<%= div_to_percent(channel.high_risk_money,channel.total_cent) %>）
+          <font color='gray'>其他：</font><%= format_yuan(cent_to_yuan(channel.other_money)) %>元（<%= div_to_percent(channel.other_money,channel.total_cent) %>）
         </td>
-        <td><%= channel.earnings_yuan %></td>
+        <td class="money"><%= format_yuan(channel.earnings_yuan) %></td>
         <td><%= link_to 'Show', channel %></td>
         <td><%= link_to 'Edit', edit_channel_path(channel) %></td>
         <td><%= link_to 'Destroy', channel, method: :delete, data: { confirm: 'Are you sure?' } %></td>
@@ -39,11 +39,11 @@
   </tbody>
 </table>
 <p>
-合计：<%= @total_yuan %>元
-<font color='green'>低风险：</font><%= cent_to_yuan(@total_lower_risk) %>元（<%= format_to_percent(Float(@total_lower_risk)/@total_cent) %>）
-<font color='orange'>中等风险：</font><%= cent_to_yuan(@total_medium_risk) %>元（<%= format_to_percent(Float(@total_medium_risk)/@total_cent) %>）
-<font color='red'>高风险：</font><%= cent_to_yuan(@total_high_risk) %>元（<%= format_to_percent(Float(@total_high_risk)/@total_cent) %>）
-<font color='gray'>其他：</font><%= cent_to_yuan(@other) %>元（<%= div_to_percent(@other,@total_cent) %>）
+合计：<%= format_yuan(@total_yuan) %>元
+<font color='green'>低风险：</font><%= format_yuan(cent_to_yuan(@total_lower_risk)) %>元（<%= format_to_percent(Float(@total_lower_risk)/@total_cent) %>）
+<font color='orange'>中等风险：</font><%= format_yuan(cent_to_yuan(@total_medium_risk)) %>元（<%= format_to_percent(Float(@total_medium_risk)/@total_cent) %>）
+<font color='red'>高风险：</font><%= format_yuan(cent_to_yuan(@total_high_risk)) %>元（<%= format_to_percent(Float(@total_high_risk)/@total_cent) %>）
+<font color='gray'>其他：</font><%= format_yuan(cent_to_yuan(@other)) %>元（<%= div_to_percent(@other,@total_cent) %>）
 <br>
 平均利率：<%= div_to_percent(@average_rate,1.0) %>
 </p>
@@ -55,9 +55,9 @@
     <tr>
       <th>渠道</th>
       <th>投资</th>
-      <th>金额</th>
+      <th class="money">金额</th>
       <th>利率</th>
-      <th>预期收益（元）</th>
+      <th class="money">预期收益（元）</th>
       <th>到期时间</th>
       <th>距离天数</th>
       <th>操作</th>
@@ -69,9 +69,9 @@
       <tr>
         <td><%= financing.channel.name %></td>
         <td><%= financing.name %></td>
-        <td><%= financing.money_yuan %></td>
+        <td class="money"><%= format_yuan(financing.money_yuan) %></td>
         <td><%= financing.exp_rate_percent %>%</td>
-        <td><%= financing.exp_earning_yuan %></td>
+        <td class="money"><%= format_yuan(financing.exp_earning_yuan) %></td>
         <td><%= financing.exp_antedated.strftime('%Y-%m-%d') %></td>
         <td><font color='red'><%= financing.exp_antedated-Time.now.to_date %></font></td>
         <td>
@@ -106,7 +106,7 @@
       <% else %>
         <td><%= Financing::TIME_TO_LIQUIDITY_TEXTS[key.to_sym] %></td>
       <% end %>
-      <td><%= @time_to_liquidity_stat[key][:cent]/100.0 %></td>
+      <td class="money"><%= format_yuan(@time_to_liquidity_stat[key][:cent]/100.0) %></td>
       <td><%= div_to_percent(@time_to_liquidity_stat[key][:cent].to_f,@total_cent) %></td>
       <td><%= @time_to_liquidity_stat[key][:size] %></td>
       <td><%= div_to_percent(@time_to_liquidity_stat[key][:average_rate],1.0) %></td>
@@ -122,7 +122,7 @@
     <thead>
       <tr>
         <th>流动性</th>
-        <th>金额</th>
+        <th class="money">金额</th>
         <th>占比</th>
         <th>投资数</th>
         <th>平均利率</th>
@@ -132,49 +132,49 @@
     <tbody>
       <tr>
         <td><%= link_to("活期","/financings/current")%></td>
-        <td><%= @current_financings[:cent]/100.0 %></td>
+        <td class="money"><%= format_yuan(@current_financings[:cent]/100.0) %></td>
         <td><%= div_to_percent(@current_financings[:cent].to_f,@total_cent) %></td>
         <td><%= @current_financings[:size] %></td>
         <td><%= div_to_percent(@current_financings[:average_rate],1.0) %></td>
       </tr>
       <tr>
         <td>一个月内</td>
-        <td><%= @expires_in_one_month[:cent]/100.0 %></td>
+        <td class="money"><%= format_yuan(@expires_in_one_month[:cent]/100.0) %></td>
         <td><%= div_to_percent(@expires_in_one_month[:cent].to_f,@total_cent) %></td>
         <td><%= @expires_in_one_month[:size] %></td>
         <td><%= div_to_percent(@expires_in_one_month[:average_rate],1.0) %></td>
       </tr>
       <tr>
         <td>三个月内</td>
-        <td><%= @expires_in_three_month[:cent]/100.0 %></td>
+        <td class="money"><%= format_yuan(@expires_in_three_month[:cent]/100.0) %></td>
         <td><%= div_to_percent(@expires_in_three_month[:cent].to_f,@total_cent) %></td>
         <td><%= @expires_in_three_month[:size] %></td>
         <td><%= div_to_percent(@expires_in_three_month[:average_rate],1.0) %></td>
       </tr>
       <tr>
         <td>半年内</td>
-        <td><%= @expires_in_half_year[:cent]/100.0 %></td>
+        <td class="money"><%= format_yuan(@expires_in_half_year[:cent]/100.0) %></td>
         <td><%= div_to_percent(@expires_in_half_year[:cent].to_f,@total_cent) %></td>
         <td><%= @expires_in_half_year[:size] %></td>
         <td><%= div_to_percent(@expires_in_half_year[:average_rate],1.0) %></td>
       </tr>
       <tr>
         <td>一年内</td>
-        <td><%= @expires_in_one_year[:cent]/100.0 %></td>
+        <td class="money"><%= format_yuan(@expires_in_one_year[:cent]/100.0) %></td>
         <td><%= div_to_percent(@expires_in_one_year[:cent].to_f,@total_cent) %></td>
         <td><%= @expires_in_one_year[:size] %></td>
         <td><%= div_to_percent(@expires_in_one_year[:average_rate],1.0) %></td>
       </tr>
       <tr>
         <td>2年以上</td>
-        <td><%= @expires_in_more_than_two_year[:cent]/100.0 %></td>
+        <td class="money"><%= format_yuan(@expires_in_more_than_two_year[:cent]/100.0) %></td>
         <td><%= div_to_percent(@expires_in_more_than_two_year[:cent].to_f,@total_cent) %></td>
         <td><%= @expires_in_more_than_two_year[:size] %></td>
         <td><%= div_to_percent(@expires_in_more_than_two_year[:average_rate],1.0) %></td>
       </tr>
       <tr>
         <td>其他</td>
-        <td><%= @other_liquidity_cent/100.0 %></td>
+        <td class="money"><%= format_yuan(@other_liquidity_cent/100.0) %></td>
         <td><%= div_to_percent(@other_liquidity_cent.to_f,@total_cent) %></td>
         <td></td>
         <td></td>
@@ -189,7 +189,7 @@
     <thead>
       <tr>
         <th>流动性</th>
-        <th>金额</th>
+        <th class="money">金额</th>
         <th>占比</th>
         <th>投资数</th>
         <th>平均利率</th>
@@ -199,49 +199,49 @@
     <tbody>
       <tr>
         <td><%= link_to("活期","/financings/current")%></td>
-        <td><%= @current_financings[:cent]/100.0 %></td>
+        <td class="money"><%= format_yuan(@current_financings[:cent]/100.0) %></td>
         <td><%= div_to_percent(@current_financings[:cent].to_f,@total_cent) %></td>
         <td><%= @current_financings[:size] %></td>
         <td><%= div_to_percent(@current_financings[:average_rate],1.0) %></td>
       </tr>
       <tr>
         <td>一个月内</td>
-        <td><%= @one_month_fixed_financings[:cent]/100.0 %></td>
+        <td class="money"><%= format_yuan(@one_month_fixed_financings[:cent]/100.0) %></td>
         <td><%= div_to_percent(@one_month_fixed_financings[:cent].to_f,@total_cent) %></td>
         <td><%= @one_month_fixed_financings[:size] %></td>
         <td><%= div_to_percent(@one_month_fixed_financings[:average_rate],1.0) %></td>
       </tr>
       <tr>
         <td>三个月内</td>
-        <td><%= @three_month_fixed_financings[:cent]/100.0 %></td>
+        <td class="money"><%= format_yuan(@three_month_fixed_financings[:cent]/100.0) %></td>
         <td><%= div_to_percent(@three_month_fixed_financings[:cent].to_f,@total_cent) %></td>
         <td><%= @three_month_fixed_financings[:size] %></td>
         <td><%= div_to_percent(@three_month_fixed_financings[:average_rate],1.0) %></td>
       </tr>
       <tr>
         <td>半年内</td>
-        <td><%= @half_year_fixed_financings[:cent]/100.0 %></td>
+        <td class="money"><%= format_yuan(@half_year_fixed_financings[:cent]/100.0) %></td>
         <td><%= div_to_percent(@half_year_fixed_financings[:cent].to_f,@total_cent) %></td>
         <td><%= @half_year_fixed_financings[:size] %></td>
         <td><%= div_to_percent(@half_year_fixed_financings[:average_rate],1.0) %></td>
       </tr>
       <tr>
         <td>一年内</td>
-        <td><%= @one_year_fixed_financings[:cent]/100.0 %></td>
+        <td class="money"><%= format_yuan(@one_year_fixed_financings[:cent]/100.0) %></td>
         <td><%= div_to_percent(@one_year_fixed_financings[:cent].to_f,@total_cent) %></td>
         <td><%= @one_year_fixed_financings[:size] %></td>
         <td><%= div_to_percent(@one_year_fixed_financings[:average_rate],1.0) %></td>
       </tr>
       <tr>
         <td>一年以上</td>
-        <td><%= @more_than_one_year_fixed_financings[:cent]/100.0 %></td>
+        <td class="money"><%= format_yuan(@more_than_one_year_fixed_financings[:cent]/100.0) %></td>
         <td><%= div_to_percent(@more_than_one_year_fixed_financings[:cent].to_f,@total_cent) %></td>
         <td><%= @more_than_one_year_fixed_financings[:size] %></td>
         <td><%= div_to_percent(@more_than_one_year_fixed_financings[:average_rate],1.0) %></td>
       </tr>
       <tr>
         <td>其他</td>
-        <td><%= @other_liquidity_cent/100.0 %></td>
+        <td class="money"><%= format_yuan(@other_liquidity_cent/100.0) %></td>
         <td><%= div_to_percent(@other_liquidity_cent.to_f,@total_cent) %></td>
         <td></td>
         <td></td>
@@ -256,7 +256,7 @@
     <thead>
       <tr>
         <th>Name</th>
-        <th>金额（元）</th>
+        <th class="money">金额（元）</th>
         <th>占比</th>
       </tr>
     </thead>
@@ -265,7 +265,7 @@
       <% @orientation_stat.each do |orientation,money_cent| %>
         <tr>
           <td><%= orientation.name %></td>
-          <td><%= money_cent/100.0 %></td>
+          <td class="money"><%= format_yuan(money_cent/100.0) %></td>
           <td><%= div_to_percent(money_cent.to_f,@total_cent) %></td>
         </tr>
       <% end %>

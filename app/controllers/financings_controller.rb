@@ -12,7 +12,7 @@ class FinancingsController < ApplicationController
               end
     cookies[:financing_status] = { value: @status, expires: 1.year.from_now }
     @channel = Channel.find(params['channel_id'])
-    @financings = Financing.where(:channel => @channel)
+    @financings = Financing.where(:channel => @channel).reorder(money_cent: :desc)
     unless @status.blank?
       @financings = @financings.where(:status => @status)
     end
