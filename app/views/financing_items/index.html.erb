@@ -8,6 +8,7 @@
       <th>追加投资（元）</th>
       <th>付款时间</th>
       <th>计息时间</th>
+      <th>描述</th>
     </tr>
   </thead>
 
@@ -19,6 +20,7 @@
         <td><%= financing_item.money_yuan %></td>
         <td><%= financing_item.paid_at.strftime('%Y-%m-%d %H:%M:%S') %></td>
         <td><%= financing_item.interested_at.strftime('%Y-%m-%d') %></td>
+        <td><%= financing_item.description %></td>
       </tr>
     <% end %>
   </tbody>

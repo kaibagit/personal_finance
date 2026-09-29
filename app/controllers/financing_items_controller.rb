@@ -85,6 +85,6 @@ class FinancingItemsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def financing_item_params
-      params.require(:financing_item).permit(:financing_id, :money_cent, :paid_at, :interested_at, :money_yuan, :money_flow, :market_value_yuan)
+      params.require(:financing_item).permit(:financing_id, :money_cent, :paid_at, :interested_at, :money_yuan, :money_flow, :market_value_yuan, :description)
     end
 end

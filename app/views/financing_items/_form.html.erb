@@ -16,6 +16,11 @@
     <%= f.text_field :money_yuan %> 元
   </div>
   <div class="field">
+    <%= f.label :描述 %><br>
+    <%= f.text_area :description, rows: 3, cols: 40 %>
+    <small>（选填，可填写本次追加投资的原因）</small>
+  </div>
+  <div class="field">
     <label>资金往来</label><br>
     <select id="money_flow" name="money_flow" required="required">
       <option value="">请选择</option>
