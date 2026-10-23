@@ -24,7 +24,7 @@
     <strong>到期时间:</strong>
     <%= @financing.exp_antedated %>
     <strong>回款时间:</strong>
-    <%= f.date_select :act_antedated %>
+    <%= f.date_select :act_antedated, start_year: Date.current.year - 10, end_year: Date.current.year + 10 %>
   </p>
   <p>
     <strong>期望金额:</strong>

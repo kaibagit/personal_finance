@@ -21,7 +21,7 @@
   </div>
   <div class="field">
     <%= f.label :happened_at %><br>
-    <%= f.datetime_select :happened_at %>
+    <%= f.datetime_select :happened_at, start_year: Date.current.year - 10, end_year: Date.current.year + 10 %>
   </div>
   <div class="actions">
     <%= f.submit %>
